@@ -17,11 +17,7 @@ class BillListViewAdapter(mContext: Context) : BaseAdapter() {
 
     private var records = LinkedList<RecordBean>()
 
-    private val mInflater: LayoutInflater
-
-    init {
-        mInflater = LayoutInflater.from(mContext)
-    }
+    private val mInflater: LayoutInflater = LayoutInflater.from(mContext)
 
     fun setData(records: LinkedList<RecordBean>) {
         this.records = records

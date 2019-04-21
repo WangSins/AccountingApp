@@ -1,18 +1,12 @@
 package me.sin.accountingapp.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
-
+import android.widget.*
 import com.wsy.accountingapp.R
-
 import me.sin.accountingapp.adapters.CategoryRecyclerAdapter
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.utils.GlobalUtil

@@ -95,27 +95,31 @@ constructor(date: String) : Fragment(), AdapterView.OnItemLongClickListener {
     private fun showDialog(index: Int) {
         val options = arrayOf("移除", "编辑")
         val selectedRecord = records[index]
-        val builder = AlertDialog.Builder(context)
-        builder.create()
-        builder.setItems(options) { _, which ->
-            when (which) {
-                0 -> {
-                    val uuid = selectedRecord.uuid
-                    GlobalUtil.instance.databaseHelper.removeRecord(uuid)
-                    reload()
-                    GlobalUtil.instance.mainActivity.updateHeader()
-                }
-                1 -> {
-                    val intent = Intent(activity, AddRecordActivity::class.java)
-                    val extra = Bundle()
-                    extra.putSerializable("record", selectedRecord)
-                    intent.putExtras(extra)
-                    startActivityForResult(intent, 1)
+        AlertDialog.Builder(context).let {
+            it.create()
+            it.setItems(options) { _, which ->
+                when (which) {
+                    0 -> {
+                        selectedRecord.uuid.let {
+                            GlobalUtil.instance.databaseHelper.removeRecord(it)
+                        }
+                        reload()
+                        GlobalUtil.instance.mainActivity.updateHeader()
+                    }
+                    1 -> {
+                        val extra = Bundle().apply {
+                            putSerializable("record", selectedRecord)
+                        }
+                        val intent = Intent(activity, AddRecordActivity::class.java).apply {
+                            putExtras(extra)
+                        }
+                        startActivityForResult(intent, 1)
+                    }
                 }
             }
+            it.setNegativeButton("取消", null)
+            it.setCancelable(false)
+            it.create().show()
         }
-        builder.setNegativeButton("取消", null)
-        builder.setCancelable(false)
-        builder.create().show()
     }
 }

@@ -11,19 +11,13 @@ class RecordBean : Serializable {
     private lateinit var type: RecordType
     lateinit var category: String
     var remark: String? = null
-    var date: String
+    var date: String = DateUtil.formattedDate
 
-    var timeStamp: Long
-    var uuid: String
+    var timeStamp: Long = System.currentTimeMillis()
+    var uuid: String = UUID.randomUUID().toString()
 
     enum class RecordType {
         RECORD_TYPE_EXPENSE, RECORD_TYPE_INCOME
-    }
-
-    init {
-        uuid = UUID.randomUUID().toString()
-        timeStamp = System.currentTimeMillis()
-        date = DateUtil.formattedDate
     }
 
     fun getType(): Int {
