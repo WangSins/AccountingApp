@@ -7,18 +7,18 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
 import com.wsy.accountingapp.R
-import me.sin.accountingapp.adapters.CategoryRecyclerAdapter
+import me.sin.accountingapp.adapters.CategoryRVAdapter
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.utils.GlobalUtil
 
-class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRecyclerAdapter.OnCategoryClickListener {
+class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRVAdapter.OnCategoryClickListener {
 
     private lateinit var rtName: EditText
     private lateinit var tvAmount: TextView
     private var userInput = ""
 
     private lateinit var rvRecord: RecyclerView
-    private lateinit var categoryRecyclerAdapter: CategoryRecyclerAdapter
+    private lateinit var categoryRVAdapter: CategoryRVAdapter
 
     private var category: String? = "全部"
     private var type: RecordBean.RecordType = RecordBean.RecordType.RECORD_TYPE_EXPENSE
@@ -49,11 +49,11 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRec
         rtName = findViewById(R.id.et_name)
         rtName.setText(remark)
         rvRecord = findViewById(R.id.rv_record)
-        categoryRecyclerAdapter = CategoryRecyclerAdapter(this)
-        rvRecord.adapter = categoryRecyclerAdapter
+        categoryRVAdapter = CategoryRVAdapter(this)
+        rvRecord.adapter = categoryRVAdapter
         val gridLayoutManager = GridLayoutManager(this, 4)
         rvRecord.layoutManager = gridLayoutManager
-        categoryRecyclerAdapter.notifyDataSetChanged()
+        categoryRVAdapter.notifyDataSetChanged()
         val recordExtra = intent.getSerializableExtra("record")
         if (recordExtra != null) {
             inEdit = true
@@ -72,7 +72,7 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRec
         findViewById<View>(R.id.keyboard_eight).setOnClickListener(this)
         findViewById<View>(R.id.keyboard_nine).setOnClickListener(this)
         findViewById<View>(R.id.keyboard_zero).setOnClickListener(this)
-        categoryRecyclerAdapter.setOnCategoryClickListener(this)
+        categoryRVAdapter.setOnCategoryClickListener(this)
     }
 
     private fun handleDot() {
@@ -93,8 +93,8 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRec
                 type = RecordBean.RecordType.RECORD_TYPE_EXPENSE
                 button.setImageResource(R.drawable.baseline_money_off_24)
             }
-            categoryRecyclerAdapter.changeType(type)
-            category = categoryRecyclerAdapter.selected
+            categoryRVAdapter.changeType(type)
+            category = categoryRVAdapter.selected
         }
     }
 
@@ -120,7 +120,7 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRec
                 } else {
                     record.setType(2)
                 }
-                record.category = categoryRecyclerAdapter.selected
+                record.category = categoryRVAdapter.selected
                 record.remark = rtName.text.toString()
 
                 if (inEdit) {

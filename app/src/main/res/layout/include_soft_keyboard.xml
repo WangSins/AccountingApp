@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_soft_keyboard"
+    android:layout_width="match_parent"
+    android:layout_height="220dp"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentBottom="true">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.25">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white">
+
+            <TableRow android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/keyboard_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="1" />
+
+                <Button
+                    android:id="@+id/keyboard_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="2" />
+
+                <Button
+                    android:id="@+id/keyboard_three"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="3" />
+
+            </TableRow>
+
+            <TableRow android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/keyboard_four"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="4" />
+
+                <Button
+                    android:id="@+id/keyboard_five"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="5" />
+
+                <Button
+                    android:id="@+id/keyboard_six"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="6" />
+
+            </TableRow>
+
+            <TableRow android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/keyboard_seven"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="7" />
+
+                <Button
+                    android:id="@+id/keyboard_eight"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="8" />
+
+                <Button
+                    android:id="@+id/keyboard_nine"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="9" />
+
+            </TableRow>
+
+            <TableRow android:layout_weight="1">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white" />
+
+                <Button
+                    android:id="@+id/keyboard_zero"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="0" />
+
+                <Button
+                    android:id="@+id/keyboard_dot"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="." />
+
+            </TableRow>
+
+        </TableLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.75">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/keyboard_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="@android:color/white"
+                android:src="@drawable/baseline_money_off_24" />
+
+            <ImageButton
+                android:id="@+id/keyboard_backspace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:src="@drawable/baseline_backspace_24" />
+
+            <ImageButton
+                android:id="@+id/keyboard_done"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:src="@drawable/baseline_done_24" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

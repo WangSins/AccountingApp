@@ -9,7 +9,7 @@ import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.utils.GlobalUtil
 import me.sin.accountingapp.viewholder.CategoryViewHolder
 
-class CategoryRecyclerAdapter(mContext: Context) : RecyclerView.Adapter<CategoryViewHolder>() {
+class CategoryRVAdapter(mContext: Context) : RecyclerView.Adapter<CategoryViewHolder>() {
 
     private val mInflater: LayoutInflater
 
@@ -31,7 +31,7 @@ class CategoryRecyclerAdapter(mContext: Context) : RecyclerView.Adapter<Category
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val view = mInflater.inflate(R.layout.cell_category, parent, false)
+        val view = mInflater.inflate(R.layout.item_category, parent, false)
         return CategoryViewHolder(view)
     }
 
@@ -40,7 +40,7 @@ class CategoryRecyclerAdapter(mContext: Context) : RecyclerView.Adapter<Category
         holder.imageView.setImageResource(res.resBlack)
         holder.textView.text = res.title
 
-        holder.imageView.setOnClickListener {
+        holder.itemView.setOnClickListener {
             selected = res.title
             notifyDataSetChanged()
             onCategoryClickListener.onClick(res.title)

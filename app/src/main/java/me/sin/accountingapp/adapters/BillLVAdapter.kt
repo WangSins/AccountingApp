@@ -13,7 +13,7 @@ import java.util.LinkedList
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.viewholder.BillViewHolder
 
-class BillListViewAdapter(mContext: Context) : BaseAdapter() {
+class BillLVAdapter(mContext: Context) : BaseAdapter() {
 
     private var records = LinkedList<RecordBean>()
 
@@ -34,7 +34,7 @@ class BillListViewAdapter(mContext: Context) : BaseAdapter() {
         var convertView = convertView
         val holder: BillViewHolder
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.cell_list_view, null)
+            convertView = mInflater.inflate(R.layout.item_bill, null)
 
             val recordBean = getItem(position) as RecordBean
             holder = BillViewHolder(convertView!!, recordBean)

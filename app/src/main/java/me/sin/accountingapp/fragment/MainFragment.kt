@@ -11,25 +11,21 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
-
 import com.wsy.accountingapp.R
-
-import java.util.LinkedList
-
 import me.sin.accountingapp.activity.AddRecordActivity
-import me.sin.accountingapp.adapters.BillListViewAdapter
+import me.sin.accountingapp.adapters.BillLVAdapter
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.utils.DateUtil
 import me.sin.accountingapp.utils.GlobalUtil
+import java.util.*
 
 @SuppressLint("ValidFragment")
-class MainFragment @SuppressLint("ValidFragment")
-constructor(date: String) : Fragment(), AdapterView.OnItemLongClickListener {
+class MainFragment constructor(date: String) : Fragment(), AdapterView.OnItemLongClickListener {
 
     private lateinit var rootView: View
     private lateinit var tvDay: TextView
     private lateinit var lvBill: ListView
-    private lateinit var billListViewAdapter: BillListViewAdapter
+    private lateinit var billLVAdapter: BillLVAdapter
 
     private var records: LinkedList<RecordBean>
     private var date = ""
@@ -62,10 +58,10 @@ constructor(date: String) : Fragment(), AdapterView.OnItemLongClickListener {
 
         records = GlobalUtil.instance.databaseHelper.readRecords(date)
 
-        billListViewAdapter.setData(records)
-        lvBill.adapter = billListViewAdapter
+        billLVAdapter.setData(records)
+        lvBill.adapter = billLVAdapter
 
-        if (billListViewAdapter.count > 0) {
+        if (billLVAdapter.count > 0) {
             rootView.findViewById<View>(R.id.no_record_layout).visibility = View.INVISIBLE
         }
     }
@@ -74,11 +70,11 @@ constructor(date: String) : Fragment(), AdapterView.OnItemLongClickListener {
         tvDay = rootView.findViewById(R.id.tv_day)
         lvBill = rootView.findViewById(R.id.lv_bill)
         tvDay.text = date
-        billListViewAdapter = activity?.let { BillListViewAdapter(it) }!!
-        billListViewAdapter.setData(records)
-        lvBill.adapter = billListViewAdapter
+        billLVAdapter = activity?.let { BillLVAdapter(it) }!!
+        billLVAdapter.setData(records)
+        lvBill.adapter = billLVAdapter
 
-        if (billListViewAdapter.count > 0) {
+        if (billLVAdapter.count > 0) {
             rootView.findViewById<View>(R.id.no_record_layout).visibility = View.INVISIBLE
         }
 
