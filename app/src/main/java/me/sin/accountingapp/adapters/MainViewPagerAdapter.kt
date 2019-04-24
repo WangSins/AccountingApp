@@ -29,7 +29,7 @@ class MainViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         }
 
         for (date in dates) {
-            val fragment = MainFragment(date)
+            val fragment = MainFragment.newInstance(date)
             fragments.add(fragment)
         }
     }
@@ -46,5 +46,5 @@ class MainViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     fun getDateStr(index: Int): String = dates[index]
 
-    fun getTotalCost(index: Int): Int = fragments[index].totalCost
+    fun getTotalCost(index: Int): Int = fragments[index].getTotalCost()
 }

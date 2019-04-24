@@ -1,6 +1,5 @@
 package me.sin.accountingapp.fragment
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -19,58 +18,53 @@ import me.sin.accountingapp.utils.DateUtil
 import me.sin.accountingapp.utils.GlobalUtil
 import java.util.*
 
-@SuppressLint("ValidFragment")
-class MainFragment constructor(date: String) : Fragment(), AdapterView.OnItemLongClickListener {
+class MainFragment : Fragment(), AdapterView.OnItemLongClickListener {
 
     private lateinit var rootView: View
     private lateinit var tvDay: TextView
     private lateinit var lvBill: ListView
     private lateinit var billLVAdapter: BillLVAdapter
 
-    private var records: LinkedList<RecordBean>
+    private lateinit var records: LinkedList<RecordBean>
     private var date = ""
 
-    val totalCost: Int
-        get() {
-            var totalCost = 0.0
-            for (record in records) {
-                if (record.getType() == 1) {
-                    totalCost -= record.amount
-                } else {
-                    totalCost += record.amount
-                }
-            }
-            return totalCost.toInt()
+    companion object {
+        fun newInstance(date: String): MainFragment {
+            val args = Bundle()
+            val fragment = MainFragment()
+            args.putString("dateKey", date)
+            fragment.arguments = args
+            return fragment
         }
-
-    init {
-        this.date = date
-        records = GlobalUtil.instance.databaseHelper.readRecords(date)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_main, container, false)
+        getData()
         initView()
+        setListener()
         return rootView
     }
 
-    fun reload() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setData()
+    }
 
+
+    private fun getData() {
+        this.date = arguments?.getString("dateKey").toString()
         records = GlobalUtil.instance.databaseHelper.readRecords(date)
-
-        billLVAdapter.setData(records)
-        lvBill.adapter = billLVAdapter
-
-        if (billLVAdapter.count > 0) {
-            rootView.findViewById<View>(R.id.no_record_layout).visibility = View.INVISIBLE
-        }
     }
 
     private fun initView() {
         tvDay = rootView.findViewById(R.id.tv_day)
         lvBill = rootView.findViewById(R.id.lv_bill)
-        tvDay.text = date
         billLVAdapter = activity?.let { BillLVAdapter(it) }!!
+    }
+
+    private fun setData() {
+        tvDay.text = date
         billLVAdapter.setData(records)
         lvBill.adapter = billLVAdapter
 
@@ -79,9 +73,34 @@ class MainFragment constructor(date: String) : Fragment(), AdapterView.OnItemLon
         }
 
         tvDay.text = DateUtil.getDateTitle(date)
+    }
 
+    private fun setListener() {
         lvBill.onItemLongClickListener = this
     }
+
+    fun reload() {
+        getData()
+        billLVAdapter.setData(records)
+        lvBill.adapter = billLVAdapter
+
+        if (billLVAdapter.count > 0) {
+            rootView.findViewById<View>(R.id.no_record_layout).visibility = View.INVISIBLE
+        }
+    }
+
+    fun getTotalCost(): Int {
+        getData()
+        var totalCost = 0.0
+        for (record in records) {
+            if (record.getType() == 1) {
+                totalCost -= record.amount
+            } else totalCost += record.amount
+        }
+        return totalCost.toInt()
+    }
+
+
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
         showDialog(position)
