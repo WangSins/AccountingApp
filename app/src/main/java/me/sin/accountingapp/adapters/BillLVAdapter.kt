@@ -1,23 +1,17 @@
 package me.sin.accountingapp.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-
 import com.wsy.accountingapp.R
-
-import java.util.LinkedList
-
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.viewholder.BillViewHolder
+import java.util.*
 
-class BillLVAdapter(mContext: Context) : BaseAdapter() {
+class BillLVAdapter : BaseAdapter() {
 
     private var records = LinkedList<RecordBean>()
-
-    private val mInflater: LayoutInflater = LayoutInflater.from(mContext)
 
     fun setData(records: LinkedList<RecordBean>) {
         this.records = records
@@ -34,7 +28,7 @@ class BillLVAdapter(mContext: Context) : BaseAdapter() {
         var convertView = convertView
         val holder: BillViewHolder
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_bill, null)
+            convertView = LayoutInflater.from(parent.context).inflate(R.layout.item_bill, null)
 
             val recordBean = getItem(position) as RecordBean
             holder = BillViewHolder(convertView!!, recordBean)

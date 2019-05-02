@@ -3,6 +3,7 @@ package me.sin.accountingapp.fragment
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -60,7 +61,7 @@ class MainFragment : Fragment(), AdapterView.OnItemLongClickListener {
     private fun initView() {
         tvDay = rootView.findViewById(R.id.tv_day)
         lvBill = rootView.findViewById(R.id.lv_bill)
-        billLVAdapter = activity?.let { BillLVAdapter(it) }!!
+        billLVAdapter = BillLVAdapter()
     }
 
     private fun setData() {
@@ -82,8 +83,6 @@ class MainFragment : Fragment(), AdapterView.OnItemLongClickListener {
     fun reload() {
         getData()
         billLVAdapter.setData(records)
-        lvBill.adapter = billLVAdapter
-
         if (billLVAdapter.count > 0) {
             rootView.findViewById<View>(R.id.no_record_layout).visibility = View.INVISIBLE
         }
@@ -110,7 +109,7 @@ class MainFragment : Fragment(), AdapterView.OnItemLongClickListener {
     private fun showDialog(index: Int) {
         val options = arrayOf("移除", "编辑")
         val selectedRecord = records[index]
-        AlertDialog.Builder(context).let {
+        AlertDialog.Builder(context).let { it ->
             it.create()
             it.setItems(options) { _, which ->
                 when (which) {
