@@ -1,5 +1,7 @@
 package me.sin.accountingapp.activity
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.ViewPager
@@ -20,12 +22,14 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     private lateinit var tvAmount: TickerView
     private lateinit var tvDate: TextView
     private var currentPagerPosition = 0
+    private var fabHide = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initGlobalUtil()
         initActionBar()
         initView()
+        initData()
         initListener()
         updateHeader()
     }
@@ -42,22 +46,24 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     private fun initView() {
         setContentView(R.layout.activity_main)
         tvAmount = findViewById(R.id.tv_amount)
-        tvAmount.setCharacterLists(TickerUtils.provideNumberList())
-        tvDate = findViewById(R.id.tv_date)
-
         viewPager = findViewById(R.id.view_pager)
+        tvDate = findViewById(R.id.tv_date)
+    }
+
+    private fun initData() {
+        tvAmount.setCharacterLists(TickerUtils.provideNumberList())
         pagerAdapter = MainViewPagerAdapter(supportFragmentManager)
-        pagerAdapter.notifyDataSetChanged()
         viewPager.adapter = pagerAdapter
-        viewPager.setOnPageChangeListener(this)
         viewPager.currentItem = pagerAdapter.latsIndex
     }
 
     private fun initListener() {
-        findViewById<View>(R.id.fab).setOnClickListener {
+        findViewById<View>(R.id.fab_add_record).setOnClickListener {
             val intent = Intent(this@MainActivity, AddRecordActivity::class.java)
             startActivityForResult(intent, 1)
         }
+        viewPager.addOnPageChangeListener(this)
+        pagerAdapter.notifyDataSetChanged()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -66,13 +72,10 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         updateHeader()
     }
 
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-    }
-
     override fun onPageSelected(position: Int) {
         currentPagerPosition = position
         updateHeader()
+
     }
 
     fun updateHeader() {
@@ -80,6 +83,34 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         tvAmount.text = amount
         val date = pagerAdapter.getDateStr(currentPagerPosition)
         tvDate.text = DateUtil.getWeekDay(date)
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        if (position < pagerAdapter.latsIndex) {
+            if (fabHide) {
+                scaleObjectAnimation(findViewById<View>(R.id.fab_add_record), 1f, 0f, 300)
+                findViewById<View>(R.id.fab_add_record).isEnabled = false
+                fabHide = false
+            }
+        } else {
+            if (!fabHide) {
+                scaleObjectAnimation(findViewById<View>(R.id.fab_add_record), 0f, 1f, 300)
+                findViewById<View>(R.id.fab_add_record).isEnabled = true
+                fabHide = true
+            }
+
+        }
+
+    }
+
+    private fun scaleObjectAnimation(targetView: View, startSize: Float, endSize: Float, duration: Long) {
+        val scaleY = ObjectAnimator.ofFloat(targetView, "scaleY", startSize, endSize)
+        val scaleX = ObjectAnimator.ofFloat(targetView, "scaleX", startSize, endSize)
+
+        val set = AnimatorSet()
+        set.play(scaleY).with(scaleX)
+        set.duration = duration
+        set.start()
     }
 
     override fun onPageScrollStateChanged(state: Int) {
