@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcuts_add"
+        android:shortcutId="add_new_record"
+        android:shortcutDisabledMessage="@string/shortcut_disable_msg"
+        android:shortcutLongLabel="@string/add_new_record"
+        android:shortcutShortLabel="@string/add_new_record_short">
+        <intent
+            android:action="me.sin.accountingapp.activity.ADD_NEW_RECORD"
+            android:targetClass="me.sin.accountingapp.activity.AddRecordActivity"
+            android:targetPackage="me.sin.accountingapp" />
+
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+</shortcuts>
