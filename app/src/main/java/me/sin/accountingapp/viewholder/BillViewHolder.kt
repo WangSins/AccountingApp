@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
-import com.wsy.accountingapp.R
+import me.sin.accountingapp.R
 
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.utils.DateUtil

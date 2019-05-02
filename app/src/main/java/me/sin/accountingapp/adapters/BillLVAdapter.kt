@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.wsy.accountingapp.R
+import me.sin.accountingapp.R
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.viewholder.BillViewHolder
 import java.util.*

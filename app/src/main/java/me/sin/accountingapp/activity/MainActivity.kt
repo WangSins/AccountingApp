@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.TextView
 import com.robinhood.ticker.TickerUtils
 import com.robinhood.ticker.TickerView
-import com.wsy.accountingapp.R
+import me.sin.accountingapp.R
 import me.sin.accountingapp.adapters.MainViewPagerAdapter
 import me.sin.accountingapp.utils.DateUtil
 import me.sin.accountingapp.utils.GlobalUtil

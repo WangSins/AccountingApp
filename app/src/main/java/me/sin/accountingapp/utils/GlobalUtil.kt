@@ -2,7 +2,7 @@ package me.sin.accountingapp.utils
 
 import android.content.Context
 
-import com.wsy.accountingapp.R
+import me.sin.accountingapp.R
 
 import java.util.LinkedList
 

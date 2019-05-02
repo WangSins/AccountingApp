@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">微账簿</string>
-    <string name="add_new_record">记一笔</string>
-    <string name="add_new_record_short">记一笔</string>
-    <string name="shortcut_disable_msg">暂不可用</string>
 </resources>

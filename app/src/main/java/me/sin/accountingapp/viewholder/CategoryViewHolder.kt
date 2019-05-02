@@ -6,7 +6,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 
-import com.wsy.accountingapp.R
+import me.sin.accountingapp.R
 
 /**
  * Created by Sin on 2019/3/17

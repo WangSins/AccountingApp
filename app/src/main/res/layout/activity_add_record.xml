@@ -28,7 +28,7 @@
             android:layout_height="50dp"
             android:layout_below="@+id/tv_amount"
             android:layout_margin="10dp"
-            android:background="@drawable/bg_edit_text"
+            android:background="@drawable/bg_add_record_edit_text"
             android:paddingStart="10dp"
             android:textColor="@android:color/white"
             android:textSize="30sp"

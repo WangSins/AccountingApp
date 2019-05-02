@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.wsy.accountingapp.R
+import me.sin.accountingapp.R
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.utils.GlobalUtil
 import me.sin.accountingapp.viewholder.CategoryViewHolder
@@ -47,7 +47,7 @@ class CategoryRVAdapter(mContext: Context) : RecyclerView.Adapter<CategoryViewHo
         }
 
         if (holder.textView.text.toString() == selected) {
-            holder.background.setBackgroundResource(R.drawable.bg_edit_text)
+            holder.background.setBackgroundResource(R.drawable.bg_add_record_edit_text)
         } else {
             holder.background.setBackgroundResource(R.color.colorPrimary)
         }

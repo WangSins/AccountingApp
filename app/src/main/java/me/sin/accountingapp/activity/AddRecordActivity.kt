@@ -6,7 +6,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
-import com.wsy.accountingapp.R
+import me.sin.accountingapp.R
 import me.sin.accountingapp.adapters.CategoryRVAdapter
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.utils.GlobalUtil
@@ -151,12 +151,10 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRVA
 
     private fun updateAmountText() {
         if (userInput.contains(".")) {
-            if (userInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 1) {
-                tvAmount.text = userInput + "00"
-            } else if (userInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length == 1) {
-                tvAmount.text = userInput + "0"
-            } else if (userInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length == 2) {
-                tvAmount.text = userInput
+            when {
+                userInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 1 -> tvAmount.text = userInput + "00"
+                userInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length == 1 -> tvAmount.text = userInput + "0"
+                userInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length == 2 -> tvAmount.text = userInput
             }
         } else {
             if (userInput == "") {
