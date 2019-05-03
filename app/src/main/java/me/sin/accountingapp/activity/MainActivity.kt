@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     private lateinit var tvAmount: TickerView
     private lateinit var tvDate: TextView
     private var currentPagerPosition = 0
-    private var fabHide = false
+    private var fabShow = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         pagerAdapter = MainViewPagerAdapter(supportFragmentManager)
         viewPager.adapter = pagerAdapter
         viewPager.currentItem = pagerAdapter.latsIndex
+        currentPagerPosition = pagerAdapter.latsIndex
     }
 
     private fun initListener() {
@@ -74,8 +75,21 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     override fun onPageSelected(position: Int) {
         currentPagerPosition = position
-        updateHeader()
+        if (currentPagerPosition < pagerAdapter.latsIndex) {
+            if (fabShow) {
+                scaleObjectAnimation(findViewById<View>(R.id.fab_add_record), 1f, 0f, 300)
+                findViewById<View>(R.id.fab_add_record).isEnabled = false
+                fabShow = false
+            }
+        } else {
+            if (!fabShow) {
+                scaleObjectAnimation(findViewById<View>(R.id.fab_add_record), 0f, 1f, 300)
+                findViewById<View>(R.id.fab_add_record).isEnabled = true
+                fabShow = true
+            }
 
+        }
+        updateHeader()
     }
 
     fun updateHeader() {
@@ -86,20 +100,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        if (position < pagerAdapter.latsIndex) {
-            if (fabHide) {
-                scaleObjectAnimation(findViewById<View>(R.id.fab_add_record), 1f, 0f, 300)
-                findViewById<View>(R.id.fab_add_record).isEnabled = false
-                fabHide = false
-            }
-        } else {
-            if (!fabHide) {
-                scaleObjectAnimation(findViewById<View>(R.id.fab_add_record), 0f, 1f, 300)
-                findViewById<View>(R.id.fab_add_record).isEnabled = true
-                fabHide = true
-            }
-
-        }
 
     }
 
