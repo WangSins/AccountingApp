@@ -36,6 +36,7 @@ class MainViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     fun reload() {
         fragments[latsIndex].reload()
+        notifyDataSetChanged()
     }
 
     override fun getItem(position: Int): Fragment = fragments[position]

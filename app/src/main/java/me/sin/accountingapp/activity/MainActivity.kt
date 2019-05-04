@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
             startActivityForResult(intent, 1)
         }
         viewPager.addOnPageChangeListener(this)
-        pagerAdapter.notifyDataSetChanged()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

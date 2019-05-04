@@ -13,7 +13,7 @@ import me.sin.accountingapp.utils.GlobalUtil
 
 class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRVAdapter.OnCategoryClickListener {
 
-    private lateinit var rtName: EditText
+    private lateinit var etName: EditText
     private lateinit var tvAmount: TextView
     private var userInput = ""
 
@@ -32,6 +32,7 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRVA
         super.onCreate(savedInstanceState)
         initActionBar()
         initView()
+        initData()
         handleBackspace()
         handleDone()
         handleDot()
@@ -46,14 +47,16 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRVA
     private fun initView() {
         setContentView(R.layout.activity_add_record)
         tvAmount = findViewById(R.id.tv_amount)
-        rtName = findViewById(R.id.et_name)
-        rtName.setText(remark)
+        etName = findViewById(R.id.et_name)
         rvRecord = findViewById(R.id.rv_record)
+    }
+
+    private fun initData() {
+        etName.setText(remark)
         categoryRVAdapter = CategoryRVAdapter(this)
         rvRecord.adapter = categoryRVAdapter
-        val gridLayoutManager = GridLayoutManager(this, 4)
-        rvRecord.layoutManager = gridLayoutManager
-        categoryRVAdapter.notifyDataSetChanged()
+        rvRecord.layoutManager = GridLayoutManager(this, 4)
+
         val recordExtra = intent.getSerializableExtra("record")
         if (recordExtra != null) {
             inEdit = true
@@ -121,7 +124,7 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRVA
                     record.setType(2)
                 }
                 record.category = categoryRVAdapter.selected
-                record.remark = rtName.text.toString()
+                record.remark = etName.text.toString()
 
                 if (inEdit) {
                     GlobalUtil.instance.databaseHelper.editRecord(record.uuid, record)
@@ -167,7 +170,7 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRVA
 
     override fun onClick(category: String?) {
         this.category = category
-        rtName.setText(category)
+        etName.setText(category)
     }
 
 }
