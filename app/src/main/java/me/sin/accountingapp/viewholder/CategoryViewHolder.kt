@@ -8,9 +8,6 @@ import android.widget.TextView
 
 import me.sin.accountingapp.R
 
-/**
- * Created by Sin on 2019/3/17
- */
 class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var background: RelativeLayout = itemView.findViewById(R.id.cell_background)

@@ -28,9 +28,7 @@ class RecordDatabaseHelper(context: Context, name: String, factory: SQLiteDataba
             return dates
         }
 
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(CREATE_RECORD_DB)
-    }
+    override fun onCreate(db: SQLiteDatabase) = db.execSQL(CREATE_RECORD_DB)
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
 

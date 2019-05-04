@@ -10,10 +10,8 @@ import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.utils.DateUtil
 import me.sin.accountingapp.utils.GlobalUtil
 
-/**
- * Created by Sin on 2019/3/17
- */
 class BillViewHolder(itemView: View, record: RecordBean) {
+
     private val remarkTV: TextView = itemView.findViewById(R.id.tv_remark)
     private val amountTV: TextView = itemView.findViewById(R.id.tv_amount)
     private val timeTV: TextView = itemView.findViewById(R.id.tv_time)

@@ -115,9 +115,8 @@ class AddRecordActivity : AppCompatActivity(), View.OnClickListener, CategoryRVA
 
     private fun handleDone() {
         findViewById<View>(R.id.keyboard_done).setOnClickListener {
-            if (userInput != "") {
-                val amount = java.lang.Double.valueOf(userInput)
-                record.amount = amount
+            if (userInput.isNotEmpty()) {
+                record.amount = java.lang.Double.valueOf(userInput)
                 if (type == RecordBean.RecordType.RECORD_TYPE_EXPENSE) {
                     record.setType(1)
                 } else {
