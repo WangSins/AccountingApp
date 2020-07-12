@@ -28,25 +28,26 @@ class BillAdapter : BaseAdapter() {
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+        var itemView = convertView
         val holder: BillViewHolder
-        val recordBean = getItem(position) as RecordBean
-        if (convertView == null) {
-            convertView = LayoutInflater.from(parent.context).inflate(R.layout.item_bill, parent, false)
-            holder = BillViewHolder(convertView!!)
-            convertView.tag = holder
+        if (itemView == null) {
+            itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_bill, parent, false)
+            holder = BillViewHolder(itemView!!)
+            itemView.tag = holder
         } else {
-            holder = convertView.tag as BillViewHolder
+            holder = itemView.tag as BillViewHolder
         }
-        holder.remarkTV.text = recordBean.remark
-        holder.amountTV.text = if (recordBean.getType() == 1) {
-            "- ${recordBean.amount}"
-        } else {
-            "+ ${recordBean.amount}"
+        with(getItem(position) as RecordBean) {
+            holder.remarkTV.text = remark
+            holder.amountTV.text = if (getType() == 1) {
+                "- $amount"
+            } else {
+                "+ $amount"
+            }
+            holder.timeTV.text = DateUtil.getFormattedTime(timeStamp)
+            holder.categoryIv.setImageResource(GlobalUtil.getResourceIcon(category))
         }
-        holder.timeTV.text = DateUtil.getFormattedTime(recordBean.timeStamp)
-        holder.categoryIv.setImageResource(GlobalUtil.instance.getResourceIcon(recordBean.category))
-        return convertView
+        return itemView
     }
 }
 

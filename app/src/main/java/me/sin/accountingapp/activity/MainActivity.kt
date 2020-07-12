@@ -36,8 +36,10 @@ class MainActivity : BaseActivity() {
     override fun initData() {
         tv_amount?.setCharacterLists(TickerUtils.provideNumberList())
         mPagerAdapter = MainViewPagerAdapter(supportFragmentManager)
-        view_pager?.adapter = mPagerAdapter
-        view_pager?.currentItem = mPagerAdapter.currentLatsIndex
+        view_pager?.let {
+            it.adapter = mPagerAdapter
+            it.currentItem = mPagerAdapter.currentLatsIndex
+        }
         mCurrentPagerPosition = mPagerAdapter.currentLatsIndex
         updateHeader()
     }
@@ -61,15 +63,19 @@ class MainActivity : BaseActivity() {
                 mCurrentPagerPosition = p0
                 if (mCurrentPagerPosition < mPagerAdapter.currentLatsIndex) {
                     if (mFabShow) {
-                        AnimatorUtil.scaleObjectAnimation(fab_add_record, 1f, 0f, 300)
-                        fab_add_record.isEnabled = false
-                        mFabShow = false
+                        fab_add_record.let {
+                            AnimatorUtil.scaleObjectAnimation(it, 1f, 0f, 300)
+                            it.isEnabled = false
+                            mFabShow = false
+                        }
                     }
                 } else {
                     if (!mFabShow) {
-                        AnimatorUtil.scaleObjectAnimation(fab_add_record, 0f, 1f, 300)
-                        fab_add_record.isEnabled = true
-                        mFabShow = true
+                        fab_add_record.let {
+                            AnimatorUtil.scaleObjectAnimation(it, 0f, 1f, 300)
+                            it.isEnabled = true
+                            mFabShow = true
+                        }
                     }
                 }
                 updateHeader()

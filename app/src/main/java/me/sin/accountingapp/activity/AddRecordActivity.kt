@@ -27,9 +27,10 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
     override fun initData() {
         et_name?.setText(mRemark)
         mCategoryAdapter = CategoryAdapter()
-        rv_record?.adapter = mCategoryAdapter
-        rv_record?.layoutManager = GridLayoutManager(this, 4)
-
+        rv_record?.let {
+            it.adapter = mCategoryAdapter
+            it.layoutManager = GridLayoutManager(this, 4)
+        }
         val recordExtra = intent.getSerializableExtra("record")
         if (recordExtra != null) {
             inEdit = true
@@ -97,19 +98,20 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
     private fun handleDone() {
         keyboard_done.setOnClickListener {
             if (mUserInput.isNotEmpty()) {
-                mRecord.amount = java.lang.Double.valueOf(mUserInput)
-                if (mType == RecordBean.RecordType.RECORD_TYPE_EXPENSE) {
-                    mRecord.setType(1)
-                } else {
-                    mRecord.setType(2)
-                }
-                mRecord.category = mCategoryAdapter.currentSelected
-                mRecord.remark = et_name.text.toString()
-
-                if (inEdit) {
-                    GlobalUtil.instance.databaseHelper.editRecord(mRecord.uuid, mRecord)
-                } else {
-                    GlobalUtil.instance.databaseHelper.addRecord(mRecord)
+                mRecord.run {
+                    amount = java.lang.Double.valueOf(mUserInput)
+                    if (mType == RecordBean.RecordType.RECORD_TYPE_EXPENSE) {
+                        setType(1)
+                    } else {
+                        setType(2)
+                    }
+                    category = mCategoryAdapter.currentSelected
+                    remark = et_name.text.toString()
+                    if (inEdit) {
+                        GlobalUtil.databaseHelper.editRecord(uuid, this)
+                    } else {
+                        GlobalUtil.databaseHelper.addRecord(this)
+                    }
                 }
                 finish()
             } else {

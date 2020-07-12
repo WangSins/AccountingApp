@@ -22,7 +22,7 @@ class MainViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     }
 
     private fun initFragments() {
-        mDates = GlobalUtil.instance.databaseHelper.avaliableDate
+        mDates = GlobalUtil.databaseHelper.availableDate
 
         if (!mDates.contains(DateUtil.formattedDate)) {
             mDates.addLast(DateUtil.formattedDate)

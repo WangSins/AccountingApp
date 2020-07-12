@@ -18,7 +18,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
     private lateinit var onCategoryClickListener: OnCategoryClickListener
 
     init {
-        mCellList = GlobalUtil.instance.costRes
+        mCellList = GlobalUtil.costRes
         currentSelected = mCellList[0].title
     }
 
@@ -28,29 +28,28 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        val res = mCellList[position]
-        holder.categoryIv.setImageResource(res.resBlack)
-        holder.categoryTv.text = res.title
+        with(mCellList[position]) {
+            holder.categoryIv.setImageResource(resBlack)
+            holder.categoryTv.text = title
 
-        holder.itemView.setOnClickListener {
-            currentSelected = res.title
-            notifyDataSetChanged()
-            onCategoryClickListener.onClick(res.title)
+            holder.itemView.setOnClickListener {
+                currentSelected = title
+                notifyDataSetChanged()
+                onCategoryClickListener.onClick(title)
+            }
         }
-
         if (holder.categoryTv.text.toString() == currentSelected) {
             holder.categoryBg.setBackgroundResource(R.drawable.bg_add_record_edit_text)
         } else {
             holder.categoryBg.setBackgroundResource(R.color.colorPrimary)
         }
-
     }
 
     fun changeType(type: RecordBean.RecordType) {
         mCellList = if (type == RecordBean.RecordType.RECORD_TYPE_EXPENSE) {
-            GlobalUtil.instance.costRes
+            GlobalUtil.costRes
         } else {
-            GlobalUtil.instance.earnRes
+            GlobalUtil.earnRes
         }
 
         currentSelected = mCellList[0].title

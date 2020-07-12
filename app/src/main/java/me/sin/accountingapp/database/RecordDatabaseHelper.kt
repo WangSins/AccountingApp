@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper
 
 import java.util.LinkedList
 
-class RecordDatabaseHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?, version: Int) : SQLiteOpenHelper(context, name, factory, version) {
+class RecordDatabaseHelper(context: Context?, name: String, factory: SQLiteDatabase.CursorFactory?, version: Int) : SQLiteOpenHelper(context, name, factory, version) {
 
-    val avaliableDate: LinkedList<String>
+    val availableDate: LinkedList<String>
         get() {
             val dates = LinkedList<String>()
             val db = this.writableDatabase
@@ -34,22 +34,25 @@ class RecordDatabaseHelper(context: Context, name: String, factory: SQLiteDataba
 
     fun addRecord(bean: RecordBean) {
         val db = this.writableDatabase
-        val values = ContentValues().also {
-            it.put("uuid", bean.uuid)
-            it.put("type", bean.getType())
-            it.put("category", bean.category)
-            it.put("remark", bean.remark)
-            it.put("amount", bean.amount)
-            it.put("date", bean.date)
-            it.put("time", bean.timeStamp)
+        val values = ContentValues().apply {
+            with(bean) {
+                put("uuid", uuid)
+                put("type", getType())
+                put("category", category)
+                put("remark", remark)
+                put("amount", amount)
+                put("date", date)
+                put("time", timeStamp)
+            }
         }
         db.insert(DB_NAME, null, values)
         values.clear()
     }
 
     fun removeRecord(uuid: String) {
-        val db = this.writableDatabase
-        db.delete(DB_NAME, "uuid = ?", arrayOf(uuid))
+        with(this.writableDatabase) {
+            delete(DB_NAME, "uuid = ?", arrayOf(uuid))
+        }
     }
 
     fun editRecord(uuid: String, record: RecordBean) {
@@ -64,25 +67,15 @@ class RecordDatabaseHelper(context: Context, name: String, factory: SQLiteDataba
         val cursor = db.rawQuery("select DISTINCT * from Record where date = ? order by time asc", arrayOf(dateStr))
         if (cursor.moveToFirst()) {
             do {
-                val uuid = cursor.getString(cursor.getColumnIndex("uuid"))
-                val type = cursor.getInt(cursor.getColumnIndex("type"))
-                val category = cursor.getString(cursor.getColumnIndex("category"))
-                val remark = cursor.getString(cursor.getColumnIndex("remark"))
-                val amount = cursor.getDouble(cursor.getColumnIndex("amount"))
-                val date = cursor.getString(cursor.getColumnIndex("date"))
-                val timeStamp = cursor.getLong(cursor.getColumnIndex("time"))
-
-                val record = RecordBean().also {
-                    it.uuid = uuid
-                    it.setType(type)
-                    it.category = category
-                    it.remark = remark
-                    it.amount = amount
-                    it.date = date
-                    it.timeStamp = timeStamp
-                }
-
-                records.add(record)
+                records.add(RecordBean().apply {
+                    uuid = cursor.getString(cursor.getColumnIndex("uuid"))
+                    setType(cursor.getInt(cursor.getColumnIndex("type")))
+                    category = cursor.getString(cursor.getColumnIndex("category"))
+                    remark = cursor.getString(cursor.getColumnIndex("remark"))
+                    amount = cursor.getDouble(cursor.getColumnIndex("amount"))
+                    date = cursor.getString(cursor.getColumnIndex("date"))
+                    timeStamp = cursor.getLong(cursor.getColumnIndex("time"))
+                })
 
             } while (cursor.moveToNext())
         }
@@ -91,8 +84,8 @@ class RecordDatabaseHelper(context: Context, name: String, factory: SQLiteDataba
     }
 
     companion object {
-        val DB_NAME = "Record"
-        private val CREATE_RECORD_DB = ("create table Record ("
+        const val DB_NAME = "Record"
+        private const val CREATE_RECORD_DB = ("create table Record ("
                 + "id integer primary key autoincrement, "
                 + "uuid text, "
                 + "type integer, "

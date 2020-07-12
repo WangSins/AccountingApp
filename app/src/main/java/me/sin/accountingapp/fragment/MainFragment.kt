@@ -37,23 +37,21 @@ class MainFragment : BaseFragment() {
 
     private fun upData() {
         mDate = arguments?.getString("dateKey").toString()
-        mRecords = GlobalUtil.instance.databaseHelper.readRecords(mDate)
+        mRecords = GlobalUtil.databaseHelper.readRecords(mDate)
     }
 
     private fun setData() {
-        tv_day?.text = mDate
         mBillAdapter.setData(mRecords)
         lv_bill?.adapter = mBillAdapter
         if (mBillAdapter.count > 0) {
             no_record_layout?.visibility = View.INVISIBLE
         }
-
         tv_day?.text = DateUtil.getDateTitle(mDate)
     }
 
     fun reload() {
         upData()
-        mRecords = GlobalUtil.instance.databaseHelper.readRecords(mDate)
+        mRecords = GlobalUtil.databaseHelper.readRecords(mDate)
         mBillAdapter.setData(mRecords)
         if (mBillAdapter.count > 0) {
             no_record_layout?.visibility = View.INVISIBLE
@@ -66,7 +64,9 @@ class MainFragment : BaseFragment() {
         for (record in mRecords) {
             if (record.getType() == 1) {
                 totalCost -= record.amount
-            } else totalCost += record.amount
+            } else {
+                totalCost += record.amount
+            }
         }
         return totalCost.toInt()
     }
@@ -80,7 +80,7 @@ class MainFragment : BaseFragment() {
                 when (which) {
                     0 -> {
                         selectedRecord.uuid.let {
-                            GlobalUtil.instance.databaseHelper.removeRecord(it)
+                            GlobalUtil.databaseHelper.removeRecord(it)
                         }
                         reload()
                         val intent = Intent("updateHeader")
