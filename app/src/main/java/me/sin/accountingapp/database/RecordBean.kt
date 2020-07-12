@@ -12,7 +12,6 @@ class RecordBean : Serializable {
     lateinit var category: String
     var remark: String? = null
     var date: String = DateUtil.formattedDate
-
     var timeStamp: Long = System.currentTimeMillis()
     var uuid: String = UUID.randomUUID().toString()
 

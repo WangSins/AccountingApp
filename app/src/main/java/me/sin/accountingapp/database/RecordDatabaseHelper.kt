@@ -11,9 +11,7 @@ class RecordDatabaseHelper(context: Context, name: String, factory: SQLiteDataba
 
     val avaliableDate: LinkedList<String>
         get() {
-
             val dates = LinkedList<String>()
-
             val db = this.writableDatabase
             val cursor = db.rawQuery("select DISTINCT * from Record order by date asc", arrayOf())
             if (cursor.moveToFirst()) {
@@ -93,9 +91,7 @@ class RecordDatabaseHelper(context: Context, name: String, factory: SQLiteDataba
     }
 
     companion object {
-
         val DB_NAME = "Record"
-
         private val CREATE_RECORD_DB = ("create table Record ("
                 + "id integer primary key autoincrement, "
                 + "uuid text, "

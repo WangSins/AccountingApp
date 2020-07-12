@@ -1,5 +1,6 @@
 package me.sin.accountingapp.adapters
 
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -10,40 +11,42 @@ import java.util.*
 
 class MainViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-    private var fragments = LinkedList<MainFragment>()
-
-    private var dates = LinkedList<String>()
-
-    val latsIndex: Int
-        get() = fragments.size - 1
+    private var mFragments = LinkedList<MainFragment>()
+    private var mDates: LinkedList<String>
+    var currentLatsIndex: Int
 
     init {
+        mDates = LinkedList()
         initFragments()
+        currentLatsIndex = mFragments.size - 1
     }
 
     private fun initFragments() {
-        dates = GlobalUtil.instance.databaseHelper.avaliableDate
+        mDates = GlobalUtil.instance.databaseHelper.avaliableDate
 
-        if (!dates.contains(DateUtil.formattedDate)) {
-            dates.addLast(DateUtil.formattedDate)
+        if (!mDates.contains(DateUtil.formattedDate)) {
+            mDates.addLast(DateUtil.formattedDate)
         }
 
-        for (date in dates) {
-            val fragment = MainFragment.newInstance(date)
-            fragments.add(fragment)
+        for (date in mDates) {
+            val fragment = MainFragment()
+            val args = Bundle()
+            args.putString("dateKey", date)
+            fragment.arguments = args
+            mFragments.add(fragment)
         }
     }
 
     fun reload() {
-        fragments[latsIndex].reload()
+        mFragments[currentLatsIndex].reload()
         notifyDataSetChanged()
     }
 
-    override fun getItem(position: Int): Fragment = fragments[position]
+    override fun getItem(position: Int): Fragment = mFragments[position]
 
-    override fun getCount(): Int = fragments.size
+    override fun getCount(): Int = mFragments.size
 
-    fun getDateStr(index: Int): String = dates[index]
+    fun getDateStr(index: Int): String = mDates[index]
 
-    fun getTotalCost(index: Int): Int = fragments[index].getTotalCost()
+    fun getTotalCost(index: Int): Int = mFragments[index].getTotalCost()
 }

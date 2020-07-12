@@ -1,14 +1,10 @@
 package me.sin.accountingapp.utils
 
 import android.content.Context
-
 import me.sin.accountingapp.R
-
-import java.util.LinkedList
-
-import me.sin.accountingapp.activity.MainActivity
-import me.sin.accountingapp.database.RecordDatabaseHelper
 import me.sin.accountingapp.bean.CategoryResBean
+import me.sin.accountingapp.database.RecordDatabaseHelper
+import java.util.*
 
 class GlobalUtil {
 
@@ -41,7 +37,6 @@ class GlobalUtil {
             }
 
         }
-    lateinit var mainActivity: MainActivity
 
     var costRes = LinkedList<CategoryResBean>()
     var earnRes = LinkedList<CategoryResBean>()
@@ -63,11 +58,9 @@ class GlobalUtil {
     }
 
     companion object {
-
         val instance by lazy(LazyThreadSafetyMode.NONE) {
             GlobalUtil()
         }
-
         private val costIconRes = intArrayOf(
                 R.drawable.icon_general_white, R.drawable.icon_food_white, R.drawable.icon_drinking_white,
                 R.drawable.icon_groceries_white, R.drawable.icon_shopping_white, R.drawable.icon_personal_white,

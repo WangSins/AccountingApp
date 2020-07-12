@@ -27,7 +27,6 @@ object DateUtil {
         } catch (e: ParseException) {
             e.printStackTrace()
         }
-
         return Date()
     }
 
