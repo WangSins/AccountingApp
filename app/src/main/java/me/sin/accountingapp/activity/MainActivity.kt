@@ -47,8 +47,7 @@ class MainActivity : BaseActivity() {
     override fun initEvent() {
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, mIntentFilter)
         fab_add_record.setOnClickListener {
-            val intent = Intent(this@MainActivity, AddRecordActivity::class.java)
-            startActivityForResult(intent, 1)
+            startActivityForResult(AddRecordActivity::class.java, null, 1)
         }
         view_pager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {
@@ -90,10 +89,10 @@ class MainActivity : BaseActivity() {
     }
 
     private fun updateHeader() {
-        val amount = mPagerAdapter.getTotalCost(mCurrentPagerPosition).toString()
-        tv_amount?.text = amount
-        val date = mPagerAdapter.getDateStr(mCurrentPagerPosition)
-        tv_date?.text = DateUtil.getWeekDay(date)
+        mPagerAdapter.run {
+            tv_amount?.text = getTotalCost(mCurrentPagerPosition).toString()
+            tv_date?.text = DateUtil.getWeekDay(getDateStr(mCurrentPagerPosition))
+        }
     }
 
     override fun release() {

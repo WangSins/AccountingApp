@@ -3,7 +3,6 @@ package me.sin.accountingapp.activity
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_add_record.*
 import kotlinx.android.synthetic.main.include_soft_keyboard.*
 import me.sin.accountingapp.R
@@ -115,14 +114,15 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
                 }
                 finish()
             } else {
-                Toast.makeText(applicationContext, "金额不能为0", Toast.LENGTH_SHORT).show()
+                toast("金额不能为0")
             }
         }
     }
 
     override fun onClick(v: View) {
-        val button = v as Button
-        val input = button.text.toString()
+        val input = (v as Button).run {
+            text.toString()
+        }
         if (mUserInput.contains(".")) {
             if (mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 1 || mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length < 2) {
                 mUserInput += input

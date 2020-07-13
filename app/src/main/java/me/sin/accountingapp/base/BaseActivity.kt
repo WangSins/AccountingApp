@@ -1,7 +1,10 @@
 package me.sin.accountingapp.base
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
+
 
 /**
  * Created by Sin on 2020/7/12
@@ -11,6 +14,8 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initActionBar()
         setContentView(getLayoutResId())
+        initData()
+        initEvent()
     }
 
     open fun initActionBar() {
@@ -18,12 +23,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     abstract fun getLayoutResId(): Int
-
-    override fun onStart() {
-        super.onStart()
-        initData()
-        initEvent()
-    }
 
     open fun initData() {
 
@@ -41,4 +40,19 @@ abstract class BaseActivity : AppCompatActivity() {
     open fun release() {
 
     }
+
+    open fun startActivityForResult(cls: Class<*>?, bundle: Bundle?,
+                                    requestCode: Int) {
+        val intent = Intent()
+        intent.setClass(this, cls)
+        if (bundle != null) {
+            intent.putExtras(bundle)
+        }
+        startActivityForResult(intent, requestCode)
+    }
+
+    open fun toast(text: String?) {
+        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
+    }
+
 }

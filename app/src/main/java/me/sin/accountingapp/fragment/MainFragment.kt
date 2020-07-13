@@ -83,19 +83,16 @@ class MainFragment : BaseFragment() {
                             GlobalUtil.databaseHelper.removeRecord(it)
                         }
                         reload()
-                        val intent = Intent("updateHeader")
                         activity?.let {
-                            LocalBroadcastManager.getInstance(it).sendBroadcast(intent)
+                            LocalBroadcastManager.getInstance(it).sendBroadcast(Intent("updateHeader"))
                         }
                     }
                     1 -> {
-                        val extra = Bundle().apply {
+                        Bundle().run {
                             putSerializable("record", selectedRecord)
+                            startActivityForResult(AddRecordActivity::class.java, this, 1)
                         }
-                        val intent = Intent(activity, AddRecordActivity::class.java).apply {
-                            putExtras(extra)
-                        }
-                        startActivityForResult(intent, 1)
+
                     }
                 }
             }

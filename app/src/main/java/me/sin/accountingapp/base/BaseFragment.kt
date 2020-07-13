@@ -1,5 +1,6 @@
 package me.sin.accountingapp.base
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -28,5 +29,15 @@ abstract class BaseFragment : Fragment() {
 
     open fun initEvent() {
 
+    }
+
+    open fun startActivityForResult(cls: Class<*>, bundle: Bundle?,
+                                    requestCode: Int) {
+        val intent = Intent()
+        intent.setClass(context, cls)
+        if (bundle != null) {
+            intent.putExtras(bundle)
+        }
+        startActivityForResult(intent, requestCode)
     }
 }
