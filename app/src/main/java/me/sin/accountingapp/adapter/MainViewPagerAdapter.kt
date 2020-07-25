@@ -21,9 +21,11 @@ class MainViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         if (!mDates.contains(DateUtil.formattedDate)) {
             mDates.addLast(DateUtil.formattedDate)
         }
+        var fragment: MainFragment
+        var args: Bundle
         for (date in mDates) {
-            val fragment = MainFragment()
-            val args = Bundle()
+            fragment = MainFragment()
+            args = Bundle()
             args.putString(Constant.KEY_DATE, date)
             fragment.arguments = args
             mFragments.add(fragment)

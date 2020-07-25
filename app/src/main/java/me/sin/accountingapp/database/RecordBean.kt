@@ -1,18 +1,16 @@
 package me.sin.accountingapp.database
 
-import me.sin.accountingapp.util.DateUtil
 import java.io.Serializable
-import java.util.*
 
 class RecordBean : Serializable {
 
-    var amount: Double = 0.0
-    var remark: String = ""
-    var date: String = DateUtil.formattedDate
-    var timeStamp: Long = System.currentTimeMillis()
-    var uuid: String = UUID.randomUUID().toString()
+    var uuid: String = ""
     var type: Int = 0
     var category: String = ""
+    var remark: String = ""
+    var amount: Double = 0.0
+    var timeStamp: Long = 0
+    var date: String = ""
 
     companion object {
         const val TYPE_EXPENSE = 0

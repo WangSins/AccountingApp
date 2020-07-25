@@ -70,19 +70,16 @@ class MainFragment : BaseFragment() {
             it.setItems(options) { _, which ->
                 when (which) {
                     0 -> {
-                        selectedRecord.uuid.let {
-                            RecordDBDao.removeRecord(it)
-                        }
+                        RecordDBDao.removeRecord(selectedRecord.uuid)
                         refresh()
                         activity?.let {
                             LocalBroadcastManager.getInstance(it).sendBroadcast(Intent(Constant.ACTION_UPDATE_HEADER))
                         }
                     }
                     1 -> {
-                        Bundle().run {
+                        startActivityForResult(AddRecordActivity::class.java, Bundle().apply {
                             putSerializable(Constant.KEY_RECORD, selectedRecord)
-                            startActivityForResult(AddRecordActivity::class.java, this, 1)
-                        }
+                        }, 1)
 
                     }
                 }

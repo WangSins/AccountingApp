@@ -17,9 +17,10 @@ object RecordDBDao {
             val db = recordDBHelper.writableDatabase
             val sql = "select DISTINCT * from ${RecordDBHelper.TABLE_NAME} order by ${RecordDBHelper.COLUMN_DATE} asc"
             val cursor = db.rawQuery(sql, arrayOf())
+            var date: String
             if (cursor.moveToFirst()) {
                 do {
-                    val date = cursor.getString(cursor.getColumnIndex(RecordDBHelper.COLUMN_DATE))
+                    date = cursor.getString(cursor.getColumnIndex(RecordDBHelper.COLUMN_DATE))
                     if (!dates.contains(date)) {
                         dates.add(date)
                     }
@@ -63,9 +64,10 @@ object RecordDBDao {
         val db = recordDBHelper.writableDatabase
         val sql = "select DISTINCT * from ${RecordDBHelper.TABLE_NAME} where ${RecordDBHelper.COLUMN_DATE} = ? order by ${RecordDBHelper.COLUMN_TIME} asc"
         val cursor = db.rawQuery(sql, arrayOf(dateStr))
+        var record: RecordBean
         if (cursor.moveToFirst()) {
             do {
-                records.add(RecordBean().apply {
+                record = RecordBean().apply {
                     uuid = cursor.getString(cursor.getColumnIndex(RecordDBHelper.COLUMN_ID))
                     type = cursor.getInt(cursor.getColumnIndex(RecordDBHelper.COLUMN_TYPE))
                     category = cursor.getString(cursor.getColumnIndex(RecordDBHelper.COLUMN_CATEGORY))
@@ -73,7 +75,8 @@ object RecordDBDao {
                     amount = cursor.getDouble(cursor.getColumnIndex(RecordDBHelper.COLUMN_AMOUNT))
                     date = cursor.getString(cursor.getColumnIndex(RecordDBHelper.COLUMN_DATE))
                     timeStamp = cursor.getLong(cursor.getColumnIndex(RecordDBHelper.COLUMN_TIME))
-                })
+                }
+                records.add(record)
             } while (cursor.moveToNext())
         }
         cursor.close()

@@ -23,16 +23,10 @@ abstract class BaseFragment : Fragment() {
         initEvent()
     }
 
-    open fun initData() {
+    open fun initData() {}
+    open fun initEvent() {}
 
-    }
-
-    open fun initEvent() {
-
-    }
-
-    open fun startActivityForResult(cls: Class<*>, bundle: Bundle?,
-                                    requestCode: Int) {
+    open fun startActivityForResult(cls: Class<*>, bundle: Bundle?, requestCode: Int) {
         val intent = Intent()
         intent.setClass(context, cls)
         if (bundle != null) {

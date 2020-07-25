@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.ViewPager
 import com.robinhood.ticker.TickerUtils
@@ -20,7 +21,6 @@ class MainActivity : BaseActivity() {
 
     private lateinit var mPagerAdapter: MainViewPagerAdapter
     private var mCurrentPagerPosition = 0
-    private var mFabShow = true
     private val mIntentFilter = IntentFilter(Constant.ACTION_UPDATE_HEADER);
     private val mReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -47,37 +47,23 @@ class MainActivity : BaseActivity() {
 
     override fun initEvent() {
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, mIntentFilter)
-        fab_add_record.setOnClickListener {
-            startActivityForResult(AddRecordActivity::class.java, null, 1)
+        fab_add_record?.setOnClickListener {
+            startActivityForResult(AddRecordActivity::class.java, Bundle().apply {
+                putString(Constant.KEY_DATE, mPagerAdapter.getDateStr(mCurrentPagerPosition))
+            }, 1)
         }
         view_pager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(p0: Int) {
+            override fun onPageScrollStateChanged(p0: Int) {}
 
-            }
-
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
-
-            }
+            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
 
             override fun onPageSelected(p0: Int) {
-                mCurrentPagerPosition = p0
-                if (mCurrentPagerPosition < mPagerAdapter.currentLatsIndex) {
-                    if (mFabShow) {
-                        fab_add_record.let {
-                            AnimatorUtil.scaleObjectAnimation(it, 1f, 0f, 300)
-                            it.isEnabled = false
-                            mFabShow = false
-                        }
-                    }
+                if (mCurrentPagerPosition < p0) {
+                    AnimatorUtil.rotationObjectAnimation(fab_add_record, 0f, 180f, 350)
                 } else {
-                    if (!mFabShow) {
-                        fab_add_record.let {
-                            AnimatorUtil.scaleObjectAnimation(it, 0f, 1f, 300)
-                            it.isEnabled = true
-                            mFabShow = true
-                        }
-                    }
+                    AnimatorUtil.rotationObjectAnimation(fab_add_record, 180f, 0f, 350)
                 }
+                mCurrentPagerPosition = p0
                 updateHeader()
             }
         })

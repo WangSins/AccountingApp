@@ -35,7 +35,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
             holder.itemView.setOnClickListener {
                 currentSelected = title
                 notifyDataSetChanged()
-                onCategoryClickListener.onClick(title)
+                onCategoryClickListener.onItemClick(title)
             }
         }
         if (holder.categoryTv.text.toString() == currentSelected) {
@@ -59,11 +59,11 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
     override fun getItemCount(): Int = mCellList.size
 
     interface OnCategoryClickListener {
-        fun onClick(category: String)
+        fun onItemClick(category: String)
     }
 
-    fun setOnCategoryClickListener(onCategoryClickListener: OnCategoryClickListener) {
-        this.onCategoryClickListener = onCategoryClickListener
+    fun setOnCategoryClickListener(listener: OnCategoryClickListener) {
+        this.onCategoryClickListener = listener
     }
 
 }

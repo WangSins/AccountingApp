@@ -12,6 +12,8 @@ import me.sin.accountingapp.base.BaseActivity
 import me.sin.accountingapp.constant.Constant
 import me.sin.accountingapp.database.RecordBean
 import me.sin.accountingapp.database.RecordDBDao
+import me.sin.accountingapp.util.DateUtil
+import java.util.*
 
 class AddRecordActivity : BaseActivity(), View.OnClickListener {
 
@@ -21,6 +23,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
     private var mType: Int = RecordBean.TYPE_EXPENSE
     private val mRemark = mCurrentCategory
     private var mRecord = RecordBean()
+    private var mDate = DateUtil.formattedDate
     private var inEdit = false
 
     override fun getLayoutResId(): Int = R.layout.activity_add_record
@@ -35,7 +38,11 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         val recordExtra = intent.getSerializableExtra(Constant.KEY_RECORD)
         if (recordExtra != null) {
             inEdit = true
-            this.mRecord = recordExtra as RecordBean
+            mRecord = recordExtra as RecordBean
+        }
+        val dateExtra = intent.getStringExtra(Constant.KEY_DATE)
+        if (dateExtra != null) {
+            mDate = dateExtra
         }
     }
 
@@ -55,7 +62,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         keyboard_nine.setOnClickListener(this)
         keyboard_zero.setOnClickListener(this)
         mCategoryAdapter.setOnCategoryClickListener(object : CategoryAdapter.OnCategoryClickListener {
-            override fun onClick(category: String) {
+            override fun onItemClick(category: String) {
                 mCurrentCategory = category
                 et_name?.setText(category)
             }
@@ -99,8 +106,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
     private fun handleDone() {
         keyboard_done.setOnClickListener {
             if (mUserInput.isNotEmpty()) {
-                mRecord.run {
-                    amount = mUserInput.toDouble()
+                with(mRecord) {
                     type = if (mType == RecordBean.TYPE_EXPENSE) {
                         RecordBean.TYPE_EXPENSE
                     } else {
@@ -108,9 +114,13 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
                     }
                     category = mCategoryAdapter.currentSelected
                     remark = et_name.text.toString()
+                    amount = mUserInput.toDouble()
                     if (inEdit) {
                         RecordDBDao.editRecord(uuid, this)
                     } else {
+                        uuid = UUID.randomUUID().toString()
+                        timeStamp = System.currentTimeMillis()
+                        date = mDate
                         RecordDBDao.addRecord(this)
                     }
                 }

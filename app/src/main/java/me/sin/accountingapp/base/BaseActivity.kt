@@ -18,27 +18,15 @@ abstract class BaseActivity : AppCompatActivity() {
         initEvent()
     }
 
-    open fun initActionBar() {
-
-    }
-
+    open fun initActionBar() {}
     abstract fun getLayoutResId(): Int
-
-    open fun initData() {
-
-    }
-
-    open fun initEvent() {
-
-    }
+    open fun initData() {}
+    open fun initEvent() {}
+    open fun release() {}
 
     override fun onDestroy() {
         super.onDestroy()
         release()
-    }
-
-    open fun release() {
-
     }
 
     open fun startActivityForResult(cls: Class<*>?, bundle: Bundle?,
