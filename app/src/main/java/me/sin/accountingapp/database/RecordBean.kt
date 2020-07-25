@@ -1,37 +1,21 @@
 package me.sin.accountingapp.database
 
+import me.sin.accountingapp.util.DateUtil
 import java.io.Serializable
-import java.util.UUID
-
-import me.sin.accountingapp.utils.DateUtil
+import java.util.*
 
 class RecordBean : Serializable {
 
     var amount: Double = 0.0
-    private lateinit var type: RecordType
-    lateinit var category: String
-    var remark: String? = null
+    var remark: String = ""
     var date: String = DateUtil.formattedDate
     var timeStamp: Long = System.currentTimeMillis()
     var uuid: String = UUID.randomUUID().toString()
+    var type: Int = 0
+    var category: String = ""
 
-    enum class RecordType {
-        RECORD_TYPE_EXPENSE, RECORD_TYPE_INCOME
-    }
-
-    fun getType(): Int {
-        return if (this.type == RecordType.RECORD_TYPE_EXPENSE) {
-            1
-        } else {
-            2
-        }
-    }
-
-    fun setType(type: Int) {
-        if (type == 1) {
-            this.type = RecordType.RECORD_TYPE_EXPENSE
-        } else {
-            this.type = RecordType.RECORD_TYPE_INCOME
-        }
+    companion object {
+        const val TYPE_EXPENSE = 0
+        const val TYPE_INCOME = 1
     }
 }

@@ -1,4 +1,4 @@
-package me.sin.accountingapp.utils
+package me.sin.accountingapp.util
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator

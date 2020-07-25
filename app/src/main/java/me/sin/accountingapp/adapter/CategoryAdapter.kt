@@ -1,13 +1,13 @@
-package me.sin.accountingapp.adapters
+package me.sin.accountingapp.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import me.sin.accountingapp.R
-import me.sin.accountingapp.adapters.viewholder.CategoryViewHolder
+import me.sin.accountingapp.adapter.viewholder.CategoryViewHolder
 import me.sin.accountingapp.bean.CategoryResBean
 import me.sin.accountingapp.database.RecordBean
-import me.sin.accountingapp.utils.GlobalUtil
+import me.sin.accountingapp.util.ResUtil
 import java.util.*
 
 class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
@@ -18,7 +18,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
     private lateinit var onCategoryClickListener: OnCategoryClickListener
 
     init {
-        mCellList = GlobalUtil.costRes
+        mCellList = ResUtil.costRes
         currentSelected = mCellList[0].title
     }
 
@@ -45,11 +45,11 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
         }
     }
 
-    fun changeType(type: RecordBean.RecordType) {
-        mCellList = if (type == RecordBean.RecordType.RECORD_TYPE_EXPENSE) {
-            GlobalUtil.costRes
+    fun changeType(type: Int) {
+        mCellList = if (type == RecordBean.TYPE_EXPENSE) {
+            ResUtil.costRes
         } else {
-            GlobalUtil.earnRes
+            ResUtil.earnRes
         }
 
         currentSelected = mCellList[0].title
@@ -59,7 +59,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
     override fun getItemCount(): Int = mCellList.size
 
     interface OnCategoryClickListener {
-        fun onClick(category: String?)
+        fun onClick(category: String)
     }
 
     fun setOnCategoryClickListener(onCategoryClickListener: OnCategoryClickListener) {

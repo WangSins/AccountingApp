@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
         android:background="@drawable/ic_item_bill_circle"
         android:padding="10dp"
-        android:src="@drawable/icon_appstore" />
+        android:src="@drawable/icon_general_white" />
 
     <TextView
         android:id="@+id/tv_remark"

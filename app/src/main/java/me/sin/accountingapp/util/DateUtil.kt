@@ -1,4 +1,4 @@
-package me.sin.accountingapp.utils
+package me.sin.accountingapp.util
 
 import java.text.ParseException
 import java.text.SimpleDateFormat

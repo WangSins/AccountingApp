@@ -1,4 +1,4 @@
-package me.sin.accountingapp.adapters.viewholder
+package me.sin.accountingapp.adapter.viewholder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

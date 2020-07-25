@@ -8,11 +8,12 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_main.*
 import me.sin.accountingapp.R
 import me.sin.accountingapp.activity.AddRecordActivity
-import me.sin.accountingapp.adapters.BillAdapter
+import me.sin.accountingapp.adapter.BillAdapter
 import me.sin.accountingapp.base.BaseFragment
+import me.sin.accountingapp.constant.Constant
 import me.sin.accountingapp.database.RecordBean
-import me.sin.accountingapp.utils.DateUtil
-import me.sin.accountingapp.utils.GlobalUtil
+import me.sin.accountingapp.database.RecordDBDao
+import me.sin.accountingapp.util.DateUtil
 import java.util.*
 
 class MainFragment : BaseFragment() {
@@ -24,8 +25,8 @@ class MainFragment : BaseFragment() {
     override fun getLayoutResId(): Int = R.layout.fragment_main
 
     override fun initData() {
-        upData()
-        setData()
+        lv_bill?.adapter = mBillAdapter
+        refresh()
     }
 
     override fun initEvent() {
@@ -35,34 +36,24 @@ class MainFragment : BaseFragment() {
         }
     }
 
-    private fun upData() {
-        mDate = arguments?.getString("dateKey").toString()
-        mRecords = GlobalUtil.databaseHelper.readRecords(mDate)
-    }
-
-    private fun setData() {
+    fun refresh() {
+        mDate = arguments?.getString(Constant.KEY_DATE).toString()
+        mRecords = RecordDBDao.readRecords(mDate)
         mBillAdapter.setData(mRecords)
-        lv_bill?.adapter = mBillAdapter
-        if (mBillAdapter.count > 0) {
-            no_record_layout?.visibility = View.INVISIBLE
+        no_record_layout?.visibility = if (mBillAdapter.count > 0) {
+            View.INVISIBLE
+        } else {
+            View.VISIBLE
         }
         tv_day?.text = DateUtil.getDateTitle(mDate)
     }
 
-    fun reload() {
-        upData()
-        mRecords = GlobalUtil.databaseHelper.readRecords(mDate)
-        mBillAdapter.setData(mRecords)
-        if (mBillAdapter.count > 0) {
-            no_record_layout?.visibility = View.INVISIBLE
-        }
-    }
-
     fun getTotalCost(): Int {
-        upData()
+        mDate = arguments?.getString(Constant.KEY_DATE).toString()
+        mRecords = RecordDBDao.readRecords(mDate)
         var totalCost = 0.0
         for (record in mRecords) {
-            if (record.getType() == 1) {
+            if (record.type == RecordBean.TYPE_EXPENSE) {
                 totalCost -= record.amount
             } else {
                 totalCost += record.amount
@@ -80,16 +71,16 @@ class MainFragment : BaseFragment() {
                 when (which) {
                     0 -> {
                         selectedRecord.uuid.let {
-                            GlobalUtil.databaseHelper.removeRecord(it)
+                            RecordDBDao.removeRecord(it)
                         }
-                        reload()
+                        refresh()
                         activity?.let {
-                            LocalBroadcastManager.getInstance(it).sendBroadcast(Intent("updateHeader"))
+                            LocalBroadcastManager.getInstance(it).sendBroadcast(Intent(Constant.ACTION_UPDATE_HEADER))
                         }
                     }
                     1 -> {
                         Bundle().run {
-                            putSerializable("record", selectedRecord)
+                            putSerializable(Constant.KEY_RECORD, selectedRecord)
                             startActivityForResult(AddRecordActivity::class.java, this, 1)
                         }
 

@@ -1,22 +1,24 @@
 package me.sin.accountingapp.activity
 
+import android.annotation.SuppressLint
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_add_record.*
 import kotlinx.android.synthetic.main.include_soft_keyboard.*
 import me.sin.accountingapp.R
-import me.sin.accountingapp.adapters.CategoryAdapter
+import me.sin.accountingapp.adapter.CategoryAdapter
 import me.sin.accountingapp.base.BaseActivity
+import me.sin.accountingapp.constant.Constant
 import me.sin.accountingapp.database.RecordBean
-import me.sin.accountingapp.utils.GlobalUtil
+import me.sin.accountingapp.database.RecordDBDao
 
 class AddRecordActivity : BaseActivity(), View.OnClickListener {
 
     private var mUserInput = ""
     private lateinit var mCategoryAdapter: CategoryAdapter
-    private var mCurrentCategory: String? = "全部"
-    private var mType: RecordBean.RecordType = RecordBean.RecordType.RECORD_TYPE_EXPENSE
+    private var mCurrentCategory: String = "全部"
+    private var mType: Int = RecordBean.TYPE_EXPENSE
     private val mRemark = mCurrentCategory
     private var mRecord = RecordBean()
     private var inEdit = false
@@ -30,7 +32,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
             it.adapter = mCategoryAdapter
             it.layoutManager = GridLayoutManager(this, 4)
         }
-        val recordExtra = intent.getSerializableExtra("record")
+        val recordExtra = intent.getSerializableExtra(Constant.KEY_RECORD)
         if (recordExtra != null) {
             inEdit = true
             this.mRecord = recordExtra as RecordBean
@@ -53,7 +55,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         keyboard_nine.setOnClickListener(this)
         keyboard_zero.setOnClickListener(this)
         mCategoryAdapter.setOnCategoryClickListener(object : CategoryAdapter.OnCategoryClickListener {
-            override fun onClick(category: String?) {
+            override fun onClick(category: String) {
                 mCurrentCategory = category
                 et_name?.setText(category)
             }
@@ -70,11 +72,11 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
 
     private fun handleTypeChange() {
         keyboard_type.setOnClickListener {
-            if (mType == RecordBean.RecordType.RECORD_TYPE_EXPENSE) {
-                mType = RecordBean.RecordType.RECORD_TYPE_INCOME
+            if (mType == RecordBean.TYPE_EXPENSE) {
+                mType = RecordBean.TYPE_INCOME
                 keyboard_type.setImageResource(R.drawable.baseline_attach_money_24)
             } else {
-                mType = RecordBean.RecordType.RECORD_TYPE_EXPENSE
+                mType = RecordBean.TYPE_EXPENSE
                 keyboard_type.setImageResource(R.drawable.baseline_money_off_24)
             }
             mCategoryAdapter.changeType(mType)
@@ -98,18 +100,18 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         keyboard_done.setOnClickListener {
             if (mUserInput.isNotEmpty()) {
                 mRecord.run {
-                    amount = java.lang.Double.valueOf(mUserInput)
-                    if (mType == RecordBean.RecordType.RECORD_TYPE_EXPENSE) {
-                        setType(1)
+                    amount = mUserInput.toDouble()
+                    type = if (mType == RecordBean.TYPE_EXPENSE) {
+                        RecordBean.TYPE_EXPENSE
                     } else {
-                        setType(2)
+                        RecordBean.TYPE_INCOME
                     }
                     category = mCategoryAdapter.currentSelected
                     remark = et_name.text.toString()
                     if (inEdit) {
-                        GlobalUtil.databaseHelper.editRecord(uuid, this)
+                        RecordDBDao.editRecord(uuid, this)
                     } else {
-                        GlobalUtil.databaseHelper.addRecord(this)
+                        RecordDBDao.addRecord(this)
                     }
                 }
                 finish()
@@ -124,7 +126,8 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
             text.toString()
         }
         if (mUserInput.contains(".")) {
-            if (mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 1 || mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length < 2) {
+            if (mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 1
+                    || mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length < 2) {
                 mUserInput += input
             }
         } else {
@@ -133,15 +136,16 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         updateAmountText()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateAmountText() {
         if (mUserInput.contains(".")) {
             when {
-                mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 1 -> tv_amount?.text = mUserInput + "00"
-                mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length == 1 -> tv_amount?.text = mUserInput + "0"
+                mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 1 -> tv_amount?.text = "${mUserInput}00"
+                mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length == 1 -> tv_amount?.text = "${mUserInput}0"
                 mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length == 2 -> tv_amount?.text = mUserInput
             }
         } else {
-            tv_amount?.text = if (mUserInput == "") {
+            tv_amount?.text = if (mUserInput.isEmpty()) {
                 "0.00"
             } else {
                 "$mUserInput.00"

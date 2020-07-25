@@ -16,6 +16,7 @@
             android:background="#5e5e5e"
             android:gravity="center_vertical"
             android:paddingStart="15dp"
+            android:paddingEnd="15dp"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             tools:text="JUNE 22" />

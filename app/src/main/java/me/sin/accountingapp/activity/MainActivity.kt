@@ -10,17 +10,18 @@ import com.robinhood.ticker.TickerUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.include_content_main.*
 import me.sin.accountingapp.R
-import me.sin.accountingapp.adapters.MainViewPagerAdapter
+import me.sin.accountingapp.adapter.MainViewPagerAdapter
 import me.sin.accountingapp.base.BaseActivity
-import me.sin.accountingapp.utils.AnimatorUtil
-import me.sin.accountingapp.utils.DateUtil
+import me.sin.accountingapp.constant.Constant
+import me.sin.accountingapp.util.AnimatorUtil
+import me.sin.accountingapp.util.DateUtil
 
 class MainActivity : BaseActivity() {
 
     private lateinit var mPagerAdapter: MainViewPagerAdapter
     private var mCurrentPagerPosition = 0
     private var mFabShow = true
-    private val mIntentFilter = IntentFilter("updateHeader");
+    private val mIntentFilter = IntentFilter(Constant.ACTION_UPDATE_HEADER);
     private val mReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             updateHeader()
@@ -84,7 +85,7 @@ class MainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        mPagerAdapter.reload()
+        mPagerAdapter.reload(mCurrentPagerPosition)
         updateHeader()
     }
 

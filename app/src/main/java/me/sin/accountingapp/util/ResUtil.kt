@@ -1,12 +1,10 @@
-package me.sin.accountingapp.utils
+package me.sin.accountingapp.util
 
 import me.sin.accountingapp.R
-import me.sin.accountingapp.base.BaseApplication
 import me.sin.accountingapp.bean.CategoryResBean
-import me.sin.accountingapp.database.RecordDatabaseHelper
 import java.util.*
 
-object GlobalUtil {
+object ResUtil {
 
     private val costIconRes = intArrayOf(
             R.drawable.icon_general_white, R.drawable.icon_food_white, R.drawable.icon_drinking_white,
@@ -39,7 +37,6 @@ object GlobalUtil {
             R.drawable.icon_redpocket, R.drawable.icon_parttime, R.drawable.icon_bonus,
             R.drawable.icon_investment)
     private val earnTitle = arrayOf("全部", "报销", "工资", "红包", "兼职", "奖金", "投资")
-    var databaseHelper: RecordDatabaseHelper = RecordDatabaseHelper(BaseApplication.context, RecordDatabaseHelper.DB_NAME, null, 1)
     var costRes = LinkedList<CategoryResBean>()
     var earnRes = LinkedList<CategoryResBean>()
 

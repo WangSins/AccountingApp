@@ -1,14 +1,14 @@
-package me.sin.accountingapp.adapters
+package me.sin.accountingapp.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import me.sin.accountingapp.R
+import me.sin.accountingapp.adapter.viewholder.BillViewHolder
 import me.sin.accountingapp.database.RecordBean
-import me.sin.accountingapp.utils.DateUtil
-import me.sin.accountingapp.utils.GlobalUtil
-import me.sin.accountingapp.adapters.viewholder.BillViewHolder
+import me.sin.accountingapp.util.DateUtil
+import me.sin.accountingapp.util.ResUtil
 import java.util.*
 
 class BillAdapter : BaseAdapter() {
@@ -39,13 +39,13 @@ class BillAdapter : BaseAdapter() {
         }
         with(getItem(position) as RecordBean) {
             holder.remarkTV.text = remark
-            holder.amountTV.text = if (getType() == 1) {
+            holder.amountTV.text = if (type == RecordBean.TYPE_EXPENSE) {
                 "- $amount"
             } else {
                 "+ $amount"
             }
             holder.timeTV.text = DateUtil.getFormattedTime(timeStamp)
-            holder.categoryIv.setImageResource(GlobalUtil.getResourceIcon(category))
+            holder.categoryIv.setImageResource(ResUtil.getResourceIcon(category))
         }
         return itemView
     }

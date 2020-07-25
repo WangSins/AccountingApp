@@ -1,4 +1,4 @@
-package me.sin.accountingapp.adapters.viewholder
+package me.sin.accountingapp.adapter.viewholder
 
 import android.view.View
 import android.widget.ImageView
