@@ -1,7 +1,11 @@
 package me.sin.accountingapp.activity
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.content.Intent
 import android.support.v7.widget.GridLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_add_record.*
@@ -15,6 +19,7 @@ import me.sin.accountingapp.database.RecordDBDao
 import me.sin.accountingapp.util.DateUtil
 import java.util.*
 
+
 class AddRecordActivity : BaseActivity(), View.OnClickListener {
 
     private var mUserInput = ""
@@ -23,10 +28,30 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
     private var mType: Int = RecordBean.TYPE_EXPENSE
     private val mRemark = mCurrentCategory
     private var mRecord = RecordBean()
-    private var mDate = DateUtil.formattedDate
+    private var mDate = DateUtil.currentDate
     private var inEdit = false
 
     override fun getLayoutResId(): Int = R.layout.activity_add_record
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_add_record, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.history -> {
+                DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                    if (DateUtil.afterToday(year, month + 1, dayOfMonth)) {
+                        toast("不能预知未来")
+                        return@OnDateSetListener
+                    }
+                    mDate = DateUtil.getDateStr(year, month + 1, dayOfMonth).toString()
+                }, mDate.substring(0, 4).toInt(), mDate.substring(5, 7).toInt() - 1, mDate.substring(8, 10).toInt()).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun initData() {
         et_name?.setText(mRemark)
@@ -81,13 +106,13 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         keyboard_type.setOnClickListener {
             if (mType == RecordBean.TYPE_EXPENSE) {
                 mType = RecordBean.TYPE_INCOME
-                keyboard_type.setImageResource(R.drawable.baseline_attach_money_24)
+                keyboard_type.setImageResource(R.drawable.ic_income)
             } else {
                 mType = RecordBean.TYPE_EXPENSE
-                keyboard_type.setImageResource(R.drawable.baseline_money_off_24)
+                keyboard_type.setImageResource(R.drawable.ic_expense)
             }
             mCategoryAdapter.changeType(mType)
-            mCurrentCategory = mCategoryAdapter.currentSelected
+            mCurrentCategory = mCategoryAdapter.getCurrentSelected()
         }
     }
 
@@ -112,7 +137,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
                     } else {
                         RecordBean.TYPE_INCOME
                     }
-                    category = mCategoryAdapter.currentSelected
+                    category = mCategoryAdapter.getCurrentSelected()
                     remark = et_name.text.toString()
                     amount = mUserInput.toDouble()
                     if (inEdit) {
@@ -124,6 +149,9 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
                         RecordDBDao.addRecord(this)
                     }
                 }
+                setResult(2, Intent().apply {
+                    putExtra(Constant.KEY_DATE, mDate)
+                })
                 finish()
             } else {
                 toast("金额不能为0")

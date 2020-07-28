@@ -45,7 +45,7 @@ class MainFragment : BaseFragment() {
         } else {
             View.VISIBLE
         }
-        tv_day?.text = DateUtil.getDateTitle(mDate)
+        tv_day?.text = DateUtil.getMonth(mDate)
     }
 
     fun getTotalCost(): Int {

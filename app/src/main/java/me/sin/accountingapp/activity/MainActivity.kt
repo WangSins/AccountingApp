@@ -1,5 +1,6 @@
 package me.sin.accountingapp.activity
 
+import android.app.DatePickerDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -7,6 +8,8 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.ViewPager
+import android.view.Menu
+import android.view.MenuItem
 import com.robinhood.ticker.TickerUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.include_content_main.*
@@ -34,14 +37,41 @@ class MainActivity : BaseActivity() {
 
     override fun getLayoutResId(): Int = R.layout.activity_main
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.calendar -> {
+                val currentSelectedDate = mPagerAdapter.getDateStr(mCurrentPagerPosition)
+                DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                    val date = DateUtil.getDateStr(year, month + 1, dayOfMonth).toString()
+                    if (!mPagerAdapter.getDates().contains(date)) {
+                        toast("当日没有记录")
+                        return@OnDateSetListener
+                    }
+                    mPagerAdapter.getDates().forEachIndexed { index, s ->
+                        if (s == date) {
+                            view_pager?.currentItem = index
+                        }
+                    }
+                }, currentSelectedDate.substring(0, 4).toInt(), currentSelectedDate.substring(5, 7).toInt() - 1, currentSelectedDate.substring(8, 10).toInt()).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun initData() {
         tv_amount?.setCharacterLists(TickerUtils.provideNumberList())
         mPagerAdapter = MainViewPagerAdapter(supportFragmentManager)
+        mPagerAdapter.update(DateUtil.currentDates)
         view_pager?.let {
             it.adapter = mPagerAdapter
-            it.currentItem = mPagerAdapter.currentLatsIndex
+            it.currentItem = mPagerAdapter.getLastPosition()
         }
-        mCurrentPagerPosition = mPagerAdapter.currentLatsIndex
+        mCurrentPagerPosition = mPagerAdapter.getLastPosition()
         updateHeader()
     }
 
@@ -71,7 +101,17 @@ class MainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        mPagerAdapter.reload(mCurrentPagerPosition)
+        val date = data?.getStringExtra(Constant.KEY_DATE)
+        if (date != null) {
+            mPagerAdapter.reload(DateUtil.currentDates, date)
+            mPagerAdapter.getDates().forEachIndexed { index, s ->
+                if (s == date) {
+                    view_pager?.currentItem = index
+                }
+            }
+        } else {
+            mPagerAdapter.reload(mCurrentPagerPosition)
+        }
         updateHeader()
     }
 
