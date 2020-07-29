@@ -30,13 +30,14 @@
             android:layout_margin="10dp"
             android:background="@drawable/bg_add_record_edit_text"
             android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:textColor="@android:color/white"
             android:textSize="30sp"
             android:textStyle="normal"
-            tools:text="Book" />
+            tools:text="全部" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_record"
+            android:id="@+id/rv_category"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/et_name"

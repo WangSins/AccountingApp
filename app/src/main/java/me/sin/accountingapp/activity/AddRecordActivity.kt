@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.support.v7.widget.GridLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -56,7 +57,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
     override fun initData() {
         et_name?.setText(mRemark)
         mCategoryAdapter = CategoryAdapter()
-        rv_record?.let {
+        rv_category?.let {
             it.adapter = mCategoryAdapter
             it.layoutManager = GridLayoutManager(this, 4)
         }
@@ -72,10 +73,6 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun initEvent() {
-        handleBackspace()
-        handleDone()
-        handleDot()
-        handleTypeChange()
         keyboard_one.setOnClickListener(this)
         keyboard_two.setOnClickListener(this)
         keyboard_three.setOnClickListener(this)
@@ -86,37 +83,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         keyboard_eight.setOnClickListener(this)
         keyboard_nine.setOnClickListener(this)
         keyboard_zero.setOnClickListener(this)
-        mCategoryAdapter.setOnCategoryClickListener(object : CategoryAdapter.OnCategoryClickListener {
-            override fun onItemClick(category: String) {
-                mCurrentCategory = category
-                et_name?.setText(category)
-            }
-        })
-    }
-
-    private fun handleDot() {
-        keyboard_dot.setOnClickListener {
-            if (!mUserInput.contains(".")) {
-                mUserInput += "."
-            }
-        }
-    }
-
-    private fun handleTypeChange() {
-        keyboard_type.setOnClickListener {
-            if (mType == RecordBean.TYPE_EXPENSE) {
-                mType = RecordBean.TYPE_INCOME
-                keyboard_type.setImageResource(R.drawable.ic_income)
-            } else {
-                mType = RecordBean.TYPE_EXPENSE
-                keyboard_type.setImageResource(R.drawable.ic_expense)
-            }
-            mCategoryAdapter.changeType(mType)
-            mCurrentCategory = mCategoryAdapter.getCurrentSelected()
-        }
-    }
-
-    private fun handleBackspace() {
+        //返回
         keyboard_backspace.setOnClickListener {
             if (mUserInput.isNotEmpty()) {
                 mUserInput = mUserInput.substring(0, mUserInput.length - 1)
@@ -126,11 +93,10 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
             }
             updateAmountText()
         }
-    }
-
-    private fun handleDone() {
+        //完成
         keyboard_done.setOnClickListener {
-            if (mUserInput.isNotEmpty()) {
+            Log.e("wsy", "handleDone:mUserInput --> $mUserInput ")
+            if (userInputIsNotZero()) {
                 with(mRecord) {
                     type = if (mType == RecordBean.TYPE_EXPENSE) {
                         RecordBean.TYPE_EXPENSE
@@ -155,8 +121,34 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
                 finish()
             } else {
                 toast("金额不能为0")
+                mUserInput = ""
             }
         }
+        //小数点
+        keyboard_dot.setOnClickListener {
+            if (!mUserInput.contains(".")) {
+                mUserInput += "."
+            }
+        }
+        //输入类型
+        keyboard_type.setOnClickListener {
+            if (mType == RecordBean.TYPE_EXPENSE) {
+                mType = RecordBean.TYPE_INCOME
+                keyboard_type.setImageResource(R.drawable.ic_income)
+            } else {
+                mType = RecordBean.TYPE_EXPENSE
+                keyboard_type.setImageResource(R.drawable.ic_expense)
+            }
+            mCategoryAdapter.changeType(mType)
+            mCurrentCategory = mCategoryAdapter.getCurrentSelected()
+        }
+        //选中类型
+        mCategoryAdapter.setOnCategoryClickListener(object : CategoryAdapter.OnCategoryClickListener {
+            override fun onItemClick(category: String) {
+                mCurrentCategory = category
+                et_name?.setText(category)
+            }
+        })
     }
 
     override fun onClick(v: View) {
@@ -164,23 +156,35 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
             text.toString()
         }
         if (mUserInput.contains(".")) {
-            if (mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 1
-                    || mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length < 2) {
+            if (mUserInput == ".") {
+                mUserInput = "0."
+            }
+            val userInputSplitArray = mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            if (userInputSplitArray.size == 1 || (userInputSplitArray.size > 1 && userInputSplitArray[1].length < 2)) {
                 mUserInput += input
             }
         } else {
-            mUserInput += input
+            if (mUserInput != "0") {
+                mUserInput += input
+            } else if ((mUserInput == "0" && input != "0")) {
+                mUserInput = input
+            }
         }
         updateAmountText()
+    }
+
+    private fun userInputIsNotZero(): Boolean {
+        return mUserInput.isNotEmpty() && mUserInput != "0" && mUserInput != "0." && mUserInput != "0.0" && mUserInput != "0.00"
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateAmountText() {
         if (mUserInput.contains(".")) {
+            val userInputSplitArray = mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             when {
-                mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 1 -> tv_amount?.text = "${mUserInput}00"
-                mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length == 1 -> tv_amount?.text = "${mUserInput}0"
-                mUserInput.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].length == 2 -> tv_amount?.text = mUserInput
+                userInputSplitArray.size == 1 -> tv_amount?.text = "${mUserInput}00"
+                userInputSplitArray[1].length == 1 -> tv_amount?.text = "${mUserInput}0"
+                userInputSplitArray[1].length == 2 -> tv_amount?.text = mUserInput
             }
         } else {
             tv_amount?.text = if (mUserInput.isEmpty()) {
