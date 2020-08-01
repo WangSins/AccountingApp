@@ -11,7 +11,9 @@
         android:layout_height="match_parent"
         android:layout_above="@id/ll_soft_keyboard"
         android:layout_alignParentStart="true"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:id="@+id/tv_amount"

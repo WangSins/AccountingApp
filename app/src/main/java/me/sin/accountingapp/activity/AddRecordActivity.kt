@@ -32,8 +32,6 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
     private var mDate = DateUtil.currentDate
     private var inEdit = false
 
-    override fun getLayoutResId(): Int = R.layout.activity_add_record
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_add_record, menu)
         return true
@@ -41,6 +39,9 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
             R.id.history -> {
                 DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                     if (DateUtil.afterToday(year, month + 1, dayOfMonth)) {
@@ -48,19 +49,16 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
                         return@OnDateSetListener
                     }
                     mDate = DateUtil.getDateStr(year, month + 1, dayOfMonth).toString()
+                    supportActionBar?.title = mDate
                 }, mDate.substring(0, 4).toInt(), mDate.substring(5, 7).toInt() - 1, mDate.substring(8, 10).toInt()).show()
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun initData() {
-        et_name?.setText(mRemark)
-        mCategoryAdapter = CategoryAdapter()
-        rv_category?.let {
-            it.adapter = mCategoryAdapter
-            it.layoutManager = GridLayoutManager(this, 4)
-        }
+    override fun getLayoutResId(): Int = R.layout.activity_add_record
+
+    override fun getExtra() {
         val recordExtra = intent.getSerializableExtra(Constant.KEY_RECORD)
         if (recordExtra != null) {
             inEdit = true
@@ -69,6 +67,25 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         val dateExtra = intent.getStringExtra(Constant.KEY_DATE)
         if (dateExtra != null) {
             mDate = dateExtra
+        }
+    }
+
+    override fun initActionBar() {
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            title = mDate
+        }
+    }
+
+    override fun initData() {
+        et_name?.run {
+            setText(mRemark)
+            clearFocus()
+        }
+        mCategoryAdapter = CategoryAdapter()
+        rv_category?.let {
+            it.adapter = mCategoryAdapter
+            it.layoutManager = GridLayoutManager(this, 4)
         }
     }
 

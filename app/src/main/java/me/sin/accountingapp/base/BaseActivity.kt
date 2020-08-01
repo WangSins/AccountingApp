@@ -12,14 +12,16 @@ import android.widget.Toast
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initActionBar()
         setContentView(getLayoutResId())
+        getExtra()
+        initActionBar()
         initData()
         initEvent()
     }
 
-    open fun initActionBar() {}
     abstract fun getLayoutResId(): Int
+    open fun getExtra() {}
+    open fun initActionBar() {}
     open fun initData() {}
     open fun initEvent() {}
     open fun release() {}

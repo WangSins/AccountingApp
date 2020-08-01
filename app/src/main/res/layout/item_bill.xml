@@ -22,7 +22,7 @@
         android:layout_marginStart="16dp"
         android:layout_toEndOf="@+id/iv_category"
         android:includeFontPadding="false"
-        android:textColor="@color/colorPrimary_text"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="18sp"
         tools:text="phone" />
 
@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@id/tv_remark"
         android:layout_alignBottom="@id/iv_category"
+        android:textColor="@color/colorSecondaryText"
         android:textSize="15sp"
         tools:text="15:50" />
 
@@ -42,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerInParent="true"
+        android:textColor="@color/colorSecondaryText"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text="- 2000.00" />
