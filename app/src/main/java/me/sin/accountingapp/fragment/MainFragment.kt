@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_main.*
 import me.sin.accountingapp.R
@@ -25,22 +27,27 @@ class MainFragment : BaseFragment() {
     override fun getLayoutResId(): Int = R.layout.fragment_main
 
     override fun initData() {
-        lv_bill?.adapter = mBillAdapter
+        mDate = arguments?.getString(Constant.KEY_DATE).toString()
+        lv_bill?.run {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = mBillAdapter
+            addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+        }
         refresh()
     }
 
     override fun initEvent() {
-        lv_bill?.setOnItemLongClickListener { _, _, position, _ ->
-            showDialog(position)
-            false
-        }
+        mBillAdapter.setOnBillClickListener(object : BillAdapter.OnBillClickListener {
+            override fun onItemLongClick(view: View, position: Int) {
+                showDialog(position)
+            }
+        })
     }
 
     fun refresh() {
-        mDate = arguments?.getString(Constant.KEY_DATE).toString()
         mRecords = RecordDBDao.readRecords(mDate)
         mBillAdapter.setData(mRecords)
-        no_record_layout?.visibility = if (mBillAdapter.count > 0) {
+        no_record_layout?.visibility = if (mBillAdapter.itemCount > 0) {
             View.INVISIBLE
         } else {
             View.VISIBLE

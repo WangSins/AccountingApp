@@ -63,6 +63,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         if (recordExtra != null) {
             inEdit = true
             mRecord = recordExtra as RecordBean
+            mDate = mRecord.date
         }
         val dateExtra = intent.getStringExtra(Constant.KEY_DATE)
         if (dateExtra != null) {
