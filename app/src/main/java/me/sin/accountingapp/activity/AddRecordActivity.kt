@@ -1,13 +1,14 @@
 package me.sin.accountingapp.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.support.v7.widget.GridLayoutManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_add_record.*
 import kotlinx.android.synthetic.main.include_soft_keyboard.*
@@ -49,7 +50,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
                         return@OnDateSetListener
                     }
                     mDate = DateUtil.getDateStr(year, month + 1, dayOfMonth).toString()
-                    supportActionBar?.title = mDate
+                    supportActionBar?.title = DateUtil.getMonth(mDate)
                 }, mDate.substring(0, 4).toInt(), mDate.substring(5, 7).toInt() - 1, mDate.substring(8, 10).toInt()).show()
             }
         }
@@ -74,7 +75,7 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
     override fun initActionBar() {
         supportActionBar?.run {
             setDisplayHomeAsUpEnabled(true)
-            title = mDate
+            title = DateUtil.getMonth(mDate)
         }
     }
 
@@ -113,7 +114,6 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         }
         //完成
         keyboard_done.setOnClickListener {
-            Log.e("wsy", "handleDone:mUserInput --> $mUserInput ")
             if (userInputIsNotZero()) {
                 with(mRecord) {
                     type = if (mType == RecordBean.TYPE_EXPENSE) {
@@ -162,9 +162,15 @@ class AddRecordActivity : BaseActivity(), View.OnClickListener {
         }
         //选中类型
         mCategoryAdapter.setOnCategoryClickListener(object : CategoryAdapter.OnCategoryClickListener {
-            override fun onItemClick(category: String) {
+            override fun onItemClick(view: View, category: String) {
                 mCurrentCategory = category
-                et_name?.setText(category)
+                et_name?.run {
+                    setText(category)
+                    clearFocus()
+                }
+                with(this@AddRecordActivity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager) {
+                    hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                }
             }
         })
     }

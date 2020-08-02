@@ -32,14 +32,14 @@ object DateUtil {
     /**
      * 获取当前日期
      */
-    fun getDateStr(): String? {
+    fun getDateStr(): String {
         return SimpleDateFormat("yyyy-MM-dd").format(Date(System.currentTimeMillis()))
     }
 
     /**
      * 年月日获取格式化日期
      */
-    fun getDateStr(year: Int, month: Int, dayOfMonth: Int): String? {
+    fun getDateStr(year: Int, month: Int, dayOfMonth: Int): String {
         val yearStr = year.toString()
         var monthStr = month.toString()
         var dayStr = dayOfMonth.toString()
@@ -56,16 +56,18 @@ object DateUtil {
      * 判断日期是否是今天以后
      */
     fun afterToday(year: Int, month: Int, day: Int): Boolean {
-        return java.lang.Boolean.valueOf(getDateStr()!! < getDateStr(year, month, day)!!)
+        return getDateStr() < getDateStr(year, month, day)
     }
 
     /**
      * 格式化时间戳 HH:mm
      */
     fun getFormattedTime(timeStamp: Long): String {
-        return with(SimpleDateFormat("HH:mm", Locale.getDefault())) {
-            format(Date(timeStamp))
-        }
+        return SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(timeStamp))
+    }
+
+    fun getFormattedStr(date: String, sourceFormat: String, targetFormat: String): String {
+        return SimpleDateFormat(targetFormat).format(SimpleDateFormat(sourceFormat).parse(date))
     }
 
     /**
@@ -83,10 +85,10 @@ object DateUtil {
     }
 
     /**
-     * 获取星期几
+     * 获取周几
      */
     fun getWeekDay(date: String): String {
-        return with(arrayOf("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")) {
+        return with(arrayOf("周日", "周一", "周二", "周三", "周四", "周五", "周六")) {
             Calendar.getInstance().apply {
                 time = strToDate(date)
             }.let {

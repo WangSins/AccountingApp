@@ -24,18 +24,21 @@ class MainActivity : BaseActivity() {
 
     private lateinit var mPagerAdapter: MainViewPagerAdapter
     private var mCurrentPagerPosition = 0
-    private val mIntentFilter = IntentFilter(Constant.ACTION_UPDATE_HEADER);
+    private var mIntentFilter = IntentFilter().apply {
+        addAction(Constant.ACTION_UPDATE_HEADER)
+        addAction(Constant.ACTION_RELOAD)
+    }
     private val mReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            updateHeader()
+            when (intent?.action) {
+                Constant.ACTION_UPDATE_HEADER -> updateHeader()
+                Constant.ACTION_RELOAD -> {
+                    mPagerAdapter.update(DateUtil.currentDates)
+                    updateHeader()
+                }
+            }
         }
     }
-
-    override fun initActionBar() {
-        supportActionBar?.elevation = 0f
-    }
-
-    override fun getLayoutResId(): Int = R.layout.activity_main
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -61,6 +64,12 @@ class MainActivity : BaseActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun getLayoutResId(): Int = R.layout.activity_main
+
+    override fun initActionBar() {
+        supportActionBar?.elevation = 0f
     }
 
     override fun initData() {

@@ -2,6 +2,7 @@ package me.sin.accountingapp.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import me.sin.accountingapp.R
 import me.sin.accountingapp.adapter.viewholder.CategoryViewHolder
@@ -37,7 +38,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
             holder.itemView.setOnClickListener {
                 mCurrentSelected = title
                 notifyDataSetChanged()
-                onCategoryClickListener.onItemClick(title)
+                onCategoryClickListener.onItemClick(it, title)
             }
         }
         if (holder.categoryTv.text.toString() == mCurrentSelected) {
@@ -66,7 +67,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
     fun getCurrentSelected() = mCurrentSelected
 
     interface OnCategoryClickListener {
-        fun onItemClick(category: String)
+        fun onItemClick(view: View, category: String)
     }
 
     fun setOnCategoryClickListener(listener: OnCategoryClickListener) {
